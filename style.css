@@ -59,3 +59,15 @@ body {
 .cta-button:hover {
   background: linear-gradient(to right, #9d4edd, #00b4d8);
 }
+
+.logo {
+  width: 200px;
+  max-width: 80%;
+  height: auto;
+  margin-bottom: 1rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  filter: drop-shadow(0 0 10px rgba(157, 78, 221, 0.5));
+}
+
