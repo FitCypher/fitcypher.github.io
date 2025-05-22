@@ -14,30 +14,29 @@
         <p class="tagline">Track workouts. Fuel growth. Stay locked in.</p>
 
         <!-- Screenshot Carousel -->
-        <div class="screenshot-carousel">
-          <img
-            id="carousel-image"
-            src="assets/IMG_5914.PNG"
-            alt="App Screenshot"
-          />
-          <button id="next-button">▶</button>
+        <!-- Preview -->
+        <div class="screenshot-thumbnail" id="thumbnail">
+          <img src="assets/IMG_5914.PNG" alt="Preview Screenshot" />
         </div>
 
-        <p class="beta-note">🧪 In development — beta coming soon</p>
+        <!-- Fullscreen Carousel Modal -->
+        <div class="carousel-modal" id="carouselModal">
+          <div class="carousel-background"></div>
+        
+          <div class="carousel-container">
+            <div class="carousel" id="carousel">
+              <!-- JS will populate images -->
+            </div>
+            <button class="carousel-close" id="closeModal">✕</button>
+            <button class="carousel-next" id="nextImage">▶</button>
+          </div>
+        </div>
 
-        <a
-          href="https://instagram.com/fitcypher.app"
-          target="_blank"
-          class="cta-button"
-        >
-          Follow us on Instagram
-        </a>
-      </div>
-    </div>
+
 
     <!-- Script -->
     <script>
-      const images = [
+      const screenshots = [
         'assets/IMG_5914.PNG',
         'assets/IMG_5915.PNG',
         'assets/IMG_5916.PNG',
@@ -46,20 +45,46 @@
         'assets/IMG_5919.PNG',
       ];
 
-      let currentIndex = 0;
-      const carouselImage = document.getElementById('carousel-image');
-      const nextButton = document.getElementById('next-button');
+      const thumbnail = document.getElementById('thumbnail');
+      const modal = document.getElementById('carouselModal');
+      const carousel = document.getElementById('carousel');
+      const closeModal = document.getElementById('closeModal');
+      const nextButton = document.getElementById('nextImage');
 
-      nextButton.addEventListener('click', () => {
-        currentIndex = (currentIndex + 1) % images.length;
-        console.log('Switching to:', images[currentIndex]); // debug
-        carouselImage.src = images[currentIndex];
+      let currentIndex = 0;
+
+      // Populate carousel
+      screenshots.forEach((src, index) => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.classList.add('carousel-image');
+        if (index === 0) img.classList.add('active');
+        carousel.appendChild(img);
       });
 
-      carouselImage.onerror = () => {
-        carouselImage.alt = 'Image failed to load';
-        carouselImage.src = 'assets/logo_transparent.png';
+      const updateCarousel = () => {
+        const images = document.querySelectorAll('.carousel-image');
+        images.forEach((img, idx) => {
+          img.classList.remove('active');
+          if (idx === currentIndex) img.classList.add('active');
+        });
+        carousel.style.transform = `rotateY(${-currentIndex * 60}deg)`;
       };
+
+      thumbnail.addEventListener('click', () => {
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+
+      closeModal.addEventListener('click', () => {
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+
+      nextButton.addEventListener('click', () => {
+        currentIndex = (currentIndex + 1) % screenshots.length;
+        updateCarousel();
+      });
     </script>
   </body>
 </html>
