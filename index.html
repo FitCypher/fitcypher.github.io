@@ -7,17 +7,32 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="screenshot-thumbnail" id="thumbnail">
-    <img src="assets/IMG_5914.PNG" alt="Preview Screenshot" />
-  </div>
+  <div class="gradient-bg">
+    <div class="card">
+      <img src="assets/logo_transparent.png" alt="FitCypher Logo" class="logo" />
+      <p class="tagline">Track workouts. Fuel growth. Stay locked in.</p>
 
-  <!-- Modal Carousel -->
-  <div class="carousel-modal" id="carouselModal">
-    <div class="carousel-background"></div>
-    <div class="carousel-content">
-      <img id="modalImage" src="assets/IMG_5914.PNG" alt="App Screenshot" />
-      <button id="nextImage">▶</button>
-      <button id="closeModal">✕</button>
+      <!-- Thumbnail trigger -->
+      <div class="screenshot-thumbnail" id="thumbnail">
+        <img src="assets/IMG_5914.PNG" alt="Preview Screenshot" />
+      </div>
+
+      <!-- Modal -->
+      <div class="carousel-modal" id="carouselModal">
+        <div class="carousel-background"></div>
+        <div class="carousel-content">
+          <div class="carousel-wrapper" id="carouselWrapper">
+            <!-- Slides will be injected by JS -->
+          </div>
+          <button id="nextImage">▶</button>
+          <button id="closeModal">✕</button>
+        </div>
+      </div>
+
+      <p class="beta-note">🧪 In development — beta coming soon</p>
+      <a href="https://instagram.com/fitcypher.app" target="_blank" class="cta-button">
+        Follow us on Instagram
+      </a>
     </div>
   </div>
 
@@ -35,22 +50,39 @@
 
     const thumbnail = document.getElementById('thumbnail');
     const modal = document.getElementById('carouselModal');
-    const modalImage = document.getElementById('modalImage');
-    const nextImage = document.getElementById('nextImage');
-    const closeModal = document.getElementById('closeModal');
+    const wrapper = document.getElementById('carouselWrapper');
+    const nextBtn = document.getElementById('nextImage');
+    const closeBtn = document.getElementById('closeModal');
+
+    // Inject images into carousel
+    screenshots.forEach((src, index) => {
+      const img = document.createElement('img');
+      img.src = src;
+      img.className = 'carousel-slide';
+      if (index === 0) img.classList.add('active');
+      wrapper.appendChild(img);
+    });
+
+    const updateSlides = () => {
+      const slides = document.querySelectorAll('.carousel-slide');
+      slides.forEach((slide, idx) => {
+        slide.classList.remove('active');
+        if (idx === currentIndex) slide.classList.add('active');
+      });
+    };
 
     thumbnail.addEventListener('click', () => {
       modal.classList.add('open');
-      modalImage.src = screenshots[currentIndex];
+      updateSlides();
     });
 
-    nextImage.addEventListener('click', () => {
-      currentIndex = (currentIndex + 1) % screenshots.length;
-      modalImage.src = screenshots[currentIndex];
-    });
-
-    closeModal.addEventListener('click', () => {
+    closeBtn.addEventListener('click', () => {
       modal.classList.remove('open');
+    });
+
+    nextBtn.addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % screenshots.length;
+      updateSlides();
     });
   </script>
 </body>
