@@ -1,16 +1,27 @@
-/* Hide all scrollbars but retain scrolling */
+/* Hide all scrollbars but keep scrolling */
 html, body {
   margin: 0; padding: 0;
   overflow-y: auto;
-  scrollbar-width: none;    /* Firefox */
-  -ms-overflow-style: none; /* IE10+ */
+  scrollbar-width: none;       /* Firefox */
+  -ms-overflow-style: none;    /* IE10+ */
 }
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
-  display: none;            /* Chrome, Safari, Opera */
+  display: none;               /* Chrome, Safari, Opera */
+  width: 0; height: 0;
 }
 
-/* Lightning canvas behind everything */
+/* Restore dark background */
+html, body {
+  background: #0f0f2d;
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Lightning canvas */
 #bgCanvas {
   position: fixed;
   top: 0; left: 0;
@@ -30,8 +41,7 @@ body::-webkit-scrollbar {
   margin: 20px auto;
   text-align: center;
   box-shadow: 0 16px 40px rgba(0,0,0,0.5);
-  overflow: visible !important;  /* ensure no internal scroll */
-  /* hide any scrollbar if it ever appears */
+  overflow: visible !important;  
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -44,21 +54,26 @@ body::-webkit-scrollbar {
   margin-bottom: 16px;
 }
 
+/* New slogan styling */
 .tagline {
-  font-size: 18px;
-  margin-bottom: 16px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  font-weight: 300;
+  color: #e0e0e0;
+  margin-bottom: 20px;
+  line-height: 1.4;
 }
 
 .glow-purple {
   color: #9d4edd;
-  text-shadow: 0 0 6px rgba(157,78,221,0.5);
+  text-shadow: 0 0 8px rgba(157,78,221,0.6);
 }
 .glow-blue {
   color: #00b4d8;
-  text-shadow: 0 0 6px rgba(0,180,216,0.5);
+  text-shadow: 0 0 8px rgba(0,180,216,0.6);
 }
 
-/* Screenshot fully visible, no cropping */
+/* Screenshot fully visible */
 .screenshot img {
   width: 100%;
   height: auto;
@@ -79,7 +94,7 @@ body::-webkit-scrollbar {
   color: white;
   padding: 10px 16px;
   border-radius: 8px;
-  font-weight: bold;
+  font-weight: 600;
   text-decoration: none;
   transition: background 0.2s;
   display: inline-block;
@@ -88,7 +103,7 @@ body::-webkit-scrollbar {
   background: #009fc5;
 }
 
-/* Modal overlay */
+/* Modal styles */
 .carousel-modal {
   position: fixed; inset: 0;
   display: none;
@@ -129,3 +144,4 @@ body::-webkit-scrollbar {
 #closeModal {
   background: #d00056;
 }
+
