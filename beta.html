@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up for Beta – FitCypher</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <canvas id="bgCanvas"></canvas>
+
+  <div class="card">
+    <h2 class="glow-purple">Join the Beta</h2>
+    <p class="tagline">Be among the first to experience the AI split builder. We're launching soon — reserve your spot below!</p>
+
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeP5o5XWlRrvIBgmWX3tBl9-wCTz7YE6RLT3p8DuXkwLFd78Q/viewform?usp=header"
+            allowtransparency="true"
+            loading="lazy">
+      Loading…
+    </iframe>
+
+    <a href="index.html" class="cta-button">← Back to Home</a>
+  </div>
+
+  <script>
+    // Reuse the lightning background
+    const canvas = document.getElementById('bgCanvas'),
+          ctx = canvas.getContext('2d');
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+  </script>
+</body>
+</html>
