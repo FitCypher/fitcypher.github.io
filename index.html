@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FitCypher</title>
-  <!-- Import Poppins for text -->
+  <!-- Poppins font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="style.css"/>
 </head>
@@ -16,7 +16,7 @@
   <div class="card">
     <img src="assets/logo_transparent.png" class="logo" alt="FitCypher Logo"/>
     <p class="tagline">
-      Track workouts. 
+      Track workouts.<br/>
       <span class="glow-purple">Fuel growth.</span>
       <span class="glow-blue">Stay locked in.</span>
     </p>
@@ -24,9 +24,7 @@
       <img src="assets/IMG_5912.PNG" alt="App Screenshot"/>
     </div>
     <p class="beta-note">🧪 In development — beta coming soon</p>
-    <a href="https://instagram.com/fitcypher.app"
-       target="_blank"
-       class="cta-button">
+    <a href="https://instagram.com/fitcypher.app" target="_blank" class="cta-button">
       Follow us on Instagram
     </a>
   </div>
@@ -51,11 +49,11 @@
     'assets/IMG_5918.PNG','assets/IMG_5919.PNG'
   ];
   let currentIndex = 0;
-  const modal      = document.getElementById('carouselModal'),
-        imgEl      = document.getElementById('carouselImage'),
-        thumb      = document.getElementById('thumbnail'),
-        nextBtn    = document.getElementById('nextImage'),
-        closeBtn   = document.getElementById('closeModal');
+  const modal    = document.getElementById('carouselModal'),
+        imgEl    = document.getElementById('carouselImage'),
+        thumb    = document.getElementById('thumbnail'),
+        nextBtn  = document.getElementById('nextImage'),
+        closeBtn = document.getElementById('closeModal');
 
   thumb.addEventListener('click', () => {
     modal.classList.add('open');
@@ -134,10 +132,10 @@
       ctx.stroke();
       const brStart = this.branchIdx/this.path.length;
       if (t>brStart){
-        const bt    = (t - brStart)/(1 - brStart),
-              btot  = this.branchPts.length,
-              bh    = Math.floor(btot * Math.min(bt,1)),
-              btIdx = Math.max(0, bh - Math.floor(btot*0.3));
+        const bt     = (t - brStart)/(1 - brStart),
+              btot   = this.branchPts.length,
+              bh     = Math.floor(btot * Math.min(bt,1)),
+              btIdx  = Math.max(0, bh - Math.floor(btot*0.3));
         ctx.beginPath();
         ctx.moveTo(...this.branchPts[btIdx]);
         for (let i=btIdx+1; i<bh; i++){
@@ -169,6 +167,7 @@
   </script>
 </body>
 </html>
+
 
 
 

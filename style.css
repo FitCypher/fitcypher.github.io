@@ -1,4 +1,4 @@
-/* Hide all scrollbars but keep scrolling */
+/* Hide scrollbars but keep scroll */
 html, body {
   margin: 0; padding: 0;
   overflow-y: auto;
@@ -8,10 +8,9 @@ html, body {
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   display: none;               /* Chrome, Safari, Opera */
-  width: 0; height: 0;
 }
 
-/* Restore dark background */
+/* Dark background restored */
 html, body {
   background: #0f0f2d;
   font-family: 'Poppins', sans-serif;
@@ -36,12 +35,10 @@ html, body {
   background: #1c1c2c;
   border-radius: 20px;
   padding: 24px;
-  width: 90%;
-  max-width: 480px;
   margin: 20px auto;
   text-align: center;
   box-shadow: 0 16px 40px rgba(0,0,0,0.5);
-  overflow: visible !important;  
+  overflow: visible !important;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -49,21 +46,32 @@ html, body {
   display: none;
 }
 
+/* Responsive card width */
+.card {
+  width: 80vw;
+  max-width: 480px;
+}
+@media (max-width: 400px) {
+  .card {
+    width: 90vw;
+    padding: 16px;
+  }
+}
+
+/* Logo */
 .logo {
   width: 120px;
   margin-bottom: 16px;
 }
 
-/* New slogan styling */
+/* Tagline styling */
 .tagline {
-  font-family: 'Poppins', sans-serif;
   font-size: 20px;
   font-weight: 300;
   color: #e0e0e0;
   margin-bottom: 20px;
   line-height: 1.4;
 }
-
 .glow-purple {
   color: #9d4edd;
   text-shadow: 0 0 8px rgba(157,78,221,0.6);
@@ -73,7 +81,7 @@ html, body {
   text-shadow: 0 0 8px rgba(0,180,216,0.6);
 }
 
-/* Screenshot fully visible */
+/* Screenshot */
 .screenshot img {
   width: 100%;
   height: auto;
@@ -83,12 +91,12 @@ html, body {
   cursor: pointer;
 }
 
+/* Beta note & CTA */
 .beta-note {
   font-size: 12px;
   color: #aaa;
   margin-bottom: 12px;
 }
-
 .cta-button {
   background: #00b4d8;
   color: white;
@@ -103,7 +111,7 @@ html, body {
   background: #009fc5;
 }
 
-/* Modal styles */
+/* Modal */
 .carousel-modal {
   position: fixed; inset: 0;
   display: none;
@@ -124,7 +132,8 @@ html, body {
   text-align: center;
 }
 .carousel-content img {
-  max-width: 80vw; max-height: 80vh;
+  max-width: 80vw;
+  max-height: 80vh;
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.6);
 }
@@ -144,4 +153,5 @@ html, body {
 #closeModal {
   background: #d00056;
 }
+
 
