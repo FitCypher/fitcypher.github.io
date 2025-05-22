@@ -7,10 +7,10 @@
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <!-- Full‐screen canvas always behind -->
+  <!-- lightning canvas -->
   <canvas id="bgCanvas"></canvas>
 
-  <!-- Card now in document flow, scrollable -->
+  <!-- your card in normal flow -->
   <div class="card">
     <img src="assets/logo_transparent.png" class="logo" alt="FitCypher Logo"/>
     <p class="tagline">
@@ -26,7 +26,7 @@
     </a>
   </div>
 
-  <!-- Modal carousel -->
+  <!-- modal carousel -->
   <div class="carousel-modal" id="carouselModal">
     <div class="carousel-background"></div>
     <div class="carousel-content">
@@ -39,7 +39,7 @@
   </div>
 
   <script>
-    // — Modal logic (unchanged) —
+    // —— Modal logic —— 
     const screenshots = [
       'assets/IMG_5914.PNG','assets/IMG_5915.PNG',
       'assets/IMG_5916.PNG','assets/IMG_5917.PNG',
@@ -48,19 +48,19 @@
     let currentIndex = 0;
     const modal = document.getElementById('carouselModal'),
           imgEl = document.getElementById('carouselImage');
-    document.getElementById('thumbnail').addEventListener('click', () => {
+    document.getElementById('thumbnail').addEventListener('click', ()=>{
       modal.classList.add('open');
       imgEl.src = screenshots[currentIndex];
     });
-    document.getElementById('nextImage').addEventListener('click', () => {
-      currentIndex = (currentIndex + 1) % screenshots.length;
+    document.getElementById('nextImage').addEventListener('click', ()=>{
+      currentIndex = (currentIndex+1)%screenshots.length;
       imgEl.src = screenshots[currentIndex];
     });
-    document.getElementById('closeModal').addEventListener('click', () => {
+    document.getElementById('closeModal').addEventListener('click', ()=>{
       modal.classList.remove('open');
     });
 
-    // — Fractal-electric canvas —
+    // —— Fractal-electric canvas —— 
     const canvas = document.getElementById('bgCanvas'),
           ctx    = canvas.getContext('2d');
     let w,h;
@@ -71,54 +71,79 @@
     window.addEventListener('resize', resize);
     resize();
 
-    function drawFractal(startX,startY,horiz=false){
-      const segs = 5,
-            len  = (horiz ? w : h)/segs,
-            pts  = [[startX,startY]];
-      let x=startX, y=startY;
+    // helper to build bolt segments
+    function makeBolt(horizontal){
+      const segs = 6,
+            len  = (horizontal? w: h)/segs;
+      let x = horizontal?0: Math.random()*w,
+          y = horizontal? Math.random()*h:0;
+      const pts = [[x,y]];
       for(let i=0;i<segs;i++){
-        if(horiz) x += len; else y += len;
+        if(horizontal) x+=len; else y+=len;
         pts.push([x,y]);
-        if(horiz) y += (Math.random()*2-1)*40;
-        else       x += (Math.random()*2-1)*40;
+        // 90° jitter ±30px
+        if(horizontal) y += (Math.random()*2-1)*30;
+        else           x += (Math.random()*2-1)*30;
         pts.push([x,y]);
       }
-      // trunk
-      ctx.beginPath();
-      ctx.moveTo(pts[0][0],pts[0][1]);
-      pts.slice(1).forEach(p=>ctx.lineTo(p[0],p[1]));
-      ctx.stroke();
+      // create line segments
+      const segArr = [];
+      for(let i=0;i<pts.length-1;i++){
+        segArr.push([pts[i][0],pts[i][1],pts[i+1][0],pts[i+1][1]]);
+      }
       // one branch
-      const bi = 1 + Math.floor(Math.random()*(pts.length-3)),
-            [bx,by] = pts[bi];
-      ctx.beginPath();
-      ctx.moveTo(bx,by);
-      if(horiz) ctx.lineTo(bx,by+len*0.4);
-      else      ctx.lineTo(bx+len*0.4,by);
-      ctx.stroke();
+      const bi = 1 + Math.floor(Math.random()*(segArr.length-2)),
+            [x1,y1] = segArr[bi].slice(0,2);
+      let bx=x1, by=y1;
+      if(horizontal) by += len*0.4;
+      else           bx += len*0.4;
+      segArr.push([x1,y1,bx,by]);
+      return segArr;
     }
 
-    let last=0;
+    const activeBolts = [];
+    let nextBolt = 0;
     function animate(ts){
       requestAnimationFrame(animate);
-      // fade trails
-      ctx.globalCompositeOperation='source-over';
-      ctx.fillStyle='rgba(0,0,0,0.05)';
-      ctx.fillRect(0,0,w,h);
-      // bolt every 1s
-      if(ts-last>1000){
-        ctx.globalCompositeOperation='lighter';
-        ctx.strokeStyle='rgba(157,78,221,0.8)';
-        ctx.lineWidth=4;
-        if(Math.random()<0.5)
-          drawFractal(Math.random()*w,0,false);
-        else
-          drawFractal(0,Math.random()*h,true);
-        last=ts;
+      // full clear each frame => no trails
+      ctx.clearRect(0,0,w,h);
+
+      // spawn new bolt every 1500ms
+      if(ts>nextBolt){
+        const horizontal = Math.random()<0.5;
+        activeBolts.push({
+          segs: makeBolt(horizontal),
+          start: ts,
+          dur: 3000
+        });
+        nextBolt = ts + 1500;
+      }
+
+      // draw all active bolts
+      ctx.globalCompositeOperation='lighter';
+      ctx.strokeStyle='rgba(157,78,221,0.8)';
+      ctx.lineWidth = 5;
+      for(let i=activeBolts.length-1;i>=0;i--){
+        const b = activeBolts[i],
+              t = (ts - b.start)/b.dur;
+        if(t>=1){
+          activeBolts.splice(i,1);
+          continue;
+        }
+        // how many segments to draw
+        const count = Math.floor(b.segs.length * t);
+        ctx.beginPath();
+        for(let j=0;j<count;j++){
+          const s = b.segs[j];
+          ctx.moveTo(s[0],s[1]);
+          ctx.lineTo(s[2],s[3]);
+        }
+        ctx.stroke();
       }
     }
-    animate();
+    animate(0);
   </script>
 </body>
 </html>
+
 
