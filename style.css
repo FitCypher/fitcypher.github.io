@@ -79,3 +79,37 @@ body, html {
   background: linear-gradient(to right, #9d4edd, #00b4d8);
   box-shadow: 0 0 10px rgba(0, 180, 216, 0.5);
 }
+
+.screenshot-carousel {
+  position: relative;
+  width: 90%;
+  max-width: 320px;
+  margin: 24px auto;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+.screenshot-carousel img {
+  width: 100%;
+  border-radius: 12px;
+  transition: all 0.3s ease-in-out;
+}
+
+#next-button {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 8px 12px;
+  font-size: 16px;
+  background: #9d4edd;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+#next-button:hover {
+  background: #7b2cbf;
+}

@@ -13,9 +13,11 @@
 
         <p class="tagline">Track workouts. Fuel growth. Stay locked in.</p>
 
-        <div class="screenshot-placeholder">
-          <p>📸 Screenshots coming soon...</p>
+        <div class="screenshot-carousel">
+          <img id="carousel-image" src="assets/screenshots/screen1.png" alt="App Screenshot" />
+          <button id="next-button">▶</button>
         </div>
+
 
         <p class="beta-note">🧪 In development — beta coming soon</p>
 
@@ -24,5 +26,25 @@
         </a>
       </div>
     </div>
+    <script>
+     const images = [
+       'assets/screenshots/IMG_5914.PNG',
+       'assets/screenshots/IMG_5915.PNG',
+       'assets/screenshots/IMG_5916.PNG',
+       'assets/screenshots/IMG_5917.PNG',
+       'assets/screenshots/IMG_5918.PNG',
+       'assets/screenshots/IMG_5919.PNG',
+       // add more image paths here
+     ];
+        
+     let currentIndex = 0;
+     const carouselImage = document.getElementById('carousel-image');
+     const nextButton = document.getElementById('next-button');
+        
+     nextButton.addEventListener('click', () => {
+       currentIndex = (currentIndex + 1) % images.length;
+       carouselImage.src = images[currentIndex];
+     });
+    </script>
   </body>
 </html>
