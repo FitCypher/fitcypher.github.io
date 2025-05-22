@@ -5,16 +5,19 @@ body {
 }
 
 .screenshot-thumbnail {
-  width: 200px;
-  margin: 100px auto;
+  max-width: 300px;
+  margin: 80px auto;
   cursor: pointer;
 }
 
 .screenshot-thumbnail img {
   width: 100%;
+  height: auto;
+  display: block;
   border-radius: 12px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
+
 
 .carousel-modal {
   position: fixed;
@@ -45,12 +48,14 @@ body {
 
 .carousel-content img {
   width: 90vw;
-  max-width: 400px;
-  max-height: 80vh;
   height: auto;
+  max-width: 90vw;
+  max-height: 80vh;
   border-radius: 16px;
   object-fit: contain;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
+
 
 
 #nextImage,
