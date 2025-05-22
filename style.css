@@ -1,12 +1,13 @@
-/* Hide scrollbars (but preserve scrollability) */
+/* Hide scrollbars but keep scrolling */
 html, body {
+  margin: 0; padding: 0;
   overflow-y: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  scrollbar-width: none;       /* Firefox */
+  -ms-overflow-style: none;    /* IE10+ */
 }
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
-  display: none;
+  display: none;               /* Chrome, Safari, Opera */
 }
 
 /* Lightning canvas */
@@ -17,7 +18,7 @@ body::-webkit-scrollbar {
   z-index: 0;
 }
 
-/* Card styling */
+/* Card */
 .card {
   position: relative;
   z-index: 2;
@@ -25,16 +26,12 @@ body::-webkit-scrollbar {
   border-radius: 20px;
   padding: 24px;
   width: 90%;
-  max-width: 480px;
-  margin: 20px auto;
+  max-width: 480px;      /* wider so screenshot fits */
+  margin: 20px auto;     /* vertical spacing */
   text-align: center;
   box-shadow: 0 16px 40px rgba(0,0,0,0.5);
-  /* no internal scrollbars on the card */
-  overflow: visible;
+  overflow: visible;     /* ensure no inner scrollbar */
 }
-
-/* …rest of your CSS… */
-
 
 .logo {
   width: 120px;
@@ -50,13 +47,12 @@ body::-webkit-scrollbar {
   color: #9d4edd;
   text-shadow: 0 0 6px rgba(157,78,221,0.5);
 }
-
 .glow-blue {
   color: #00b4d8;
   text-shadow: 0 0 6px rgba(0,180,216,0.5);
 }
 
-/* screenshot fully visible */
+/* Screenshot fully visible */
 .screenshot img {
   width: 100%;
   height: auto;
@@ -80,13 +76,12 @@ body::-webkit-scrollbar {
   font-weight: bold;
   text-decoration: none;
   transition: background 0.2s;
-  display: inline-block;
 }
 .cta-button:hover {
   background: #009fc5;
 }
 
-/* modal */
+/* Modal */
 .carousel-modal {
   position: fixed; inset: 0;
   display: none;
@@ -127,6 +122,7 @@ body::-webkit-scrollbar {
 #closeModal {
   background: #d00056;
 }
+
 
 
 
