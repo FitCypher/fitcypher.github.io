@@ -10,31 +10,30 @@
     <div class="gradient-bg">
       <div class="card">
         <img src="assets/logo_transparent.png" alt="FitCypher Logo" class="logo" />
-
         <p class="tagline">Track workouts. Fuel growth. Stay locked in.</p>
 
-        <!-- Screenshot Carousel -->
-        <!-- Preview -->
+        <!-- Thumbnail -->
         <div class="screenshot-thumbnail" id="thumbnail">
           <img src="assets/IMG_5914.PNG" alt="Preview Screenshot" />
         </div>
 
-        <!-- Fullscreen Carousel Modal -->
+        <!-- Modal 3D Carousel -->
         <div class="carousel-modal" id="carouselModal">
           <div class="carousel-background"></div>
-        
           <div class="carousel-container">
-            <div class="carousel" id="carousel">
-              <!-- JS will populate images -->
-            </div>
+            <div class="carousel" id="carousel"></div>
             <button class="carousel-close" id="closeModal">✕</button>
             <button class="carousel-next" id="nextImage">▶</button>
           </div>
         </div>
 
+        <p class="beta-note">🧪 In development — beta coming soon</p>
+        <a href="https://instagram.com/fitcypher.app" target="_blank" class="cta-button">
+          Follow us on Instagram
+        </a>
+      </div>
+    </div>
 
-
-    <!-- Script -->
     <script>
       const screenshots = [
         'assets/IMG_5914.PNG',
@@ -84,6 +83,23 @@
       nextButton.addEventListener('click', () => {
         currentIndex = (currentIndex + 1) % screenshots.length;
         updateCarousel();
+      });
+
+      // Optional: swipe navigation (mobile)
+      let startX = 0;
+      carousel.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+      });
+
+      carousel.addEventListener('touchend', (e) => {
+        const endX = e.changedTouches[0].clientX;
+        if (startX - endX > 50) {
+          currentIndex = (currentIndex + 1) % screenshots.length;
+          updateCarousel();
+        } else if (endX - startX > 50) {
+          currentIndex = (currentIndex - 1 + screenshots.length) % screenshots.length;
+          updateCarousel();
+        }
       });
     </script>
   </body>
