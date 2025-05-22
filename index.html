@@ -1,54 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FitCypher</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="screenshot-thumbnail" id="thumbnail">
-      <img id="modalImage" src="assets/IMG_5914.PNG" alt="Preview Screenshot" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitCypher</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="screenshot-thumbnail" id="thumbnail">
+    <img src="assets/IMG_5914.PNG" alt="Preview Screenshot" />
+  </div>
+
+  <!-- Modal Carousel -->
+  <div class="carousel-modal" id="carouselModal">
+    <div class="carousel-background"></div>
+    <div class="carousel-content">
+      <img id="modalImage" src="assets/IMG_5914.PNG" alt="App Screenshot" />
+      <button id="nextImage">▶</button>
+      <button id="closeModal">✕</button>
     </div>
+  </div>
 
-    <div class="carousel-modal" id="carouselModal">
-      <div class="carousel-background"></div>
-      <div class="carousel-content">
-        <img id="modalImage" src="assets/IMG_5914.PNG" alt="Modal" />
-        <button id="nextImage">▶</button>
-        <button id="closeModal">✕</button>
-      </div>
-    </div>
+  <script>
+    const screenshots = [
+      'assets/IMG_5914.PNG',
+      'assets/IMG_5915.PNG',
+      'assets/IMG_5916.PNG',
+      'assets/IMG_5917.PNG',
+      'assets/IMG_5918.PNG',
+      'assets/IMG_5919.PNG',
+    ];
 
-    <script>
-      const screenshots = [
-        'assets/IMG_5914.PNG',
-        'assets/IMG_5915.PNG',
-        'assets/IMG_5916.PNG',
-        'assets/IMG_5917.PNG',
-      ];
+    let currentIndex = 0;
 
-      let currentIndex = 0;
+    const thumbnail = document.getElementById('thumbnail');
+    const modal = document.getElementById('carouselModal');
+    const modalImage = document.getElementById('modalImage');
+    const nextImage = document.getElementById('nextImage');
+    const closeModal = document.getElementById('closeModal');
 
-      const thumbnail = document.getElementById('thumbnail');
-      const modal = document.getElementById('carouselModal');
-      const modalImage = document.getElementById('modalImage');
-      const nextImage = document.getElementById('nextImage');
-      const closeModal = document.getElementById('closeModal');
+    thumbnail.addEventListener('click', () => {
+      modal.classList.add('open');
+      modalImage.src = screenshots[currentIndex];
+    });
 
-      thumbnail.addEventListener('click', () => {
-        modal.classList.add('open');
-      });
+    nextImage.addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % screenshots.length;
+      modalImage.src = screenshots[currentIndex];
+    });
 
-      nextImage.addEventListener('click', () => {
-        currentIndex = (currentIndex + 1) % screenshots.length;
-        modalImage.src = screenshots[currentIndex];
-      });
-
-      closeModal.addEventListener('click', () => {
-        modal.classList.remove('open');
-      });
-    </script>
-  </body>
+    closeModal.addEventListener('click', () => {
+      modal.classList.remove('open');
+    });
+  </script>
+</body>
 </html>
 
