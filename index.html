@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FitCypher</title>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <!-- Fractal electricity background -->
+  <!-- Canvas for fractal-electric animation -->
   <canvas id="bgCanvas"></canvas>
 
-  <!-- Main card (scrolls if needed) -->
+  <!-- Main card (scrollable, always shows logo & slogan) -->
   <div class="card">
     <img src="assets/logo_transparent.png" class="logo" alt="FitCypher Logo"/>
     <p class="tagline">
@@ -18,7 +18,8 @@
       <span class="glow-blue">Stay locked in.</span>
     </p>
     <div class="screenshot" id="thumbnail">
-      <img src="assets/IMG_5914.PNG" alt="App Screenshot"/>
+      <!-- lowest number image as thumbnail -->
+      <img src="assets/IMG_5912.PNG" alt="App Screenshot"/>
     </div>
     <p class="beta-note">🧪 In development — beta coming soon</p>
     <a href="https://instagram.com/fitcypher.app" target="_blank" class="cta-button">
@@ -26,11 +27,11 @@
     </a>
   </div>
 
-  <!-- Screenshot modal -->
+  <!-- Modal carousel -->
   <div class="carousel-modal" id="carouselModal">
     <div class="carousel-background"></div>
     <div class="carousel-content">
-      <img id="carouselImage" src="assets/IMG_5914.PNG" alt="Screenshot"/>
+      <img id="carouselImage" src="assets/IMG_5912.PNG" alt="Screenshot"/>
       <div class="carousel-buttons">
         <button id="nextImage">▶</button>
         <button id="closeModal">✕</button>
@@ -39,104 +40,133 @@
   </div>
 
   <script>
-  // — Modal logic (unchanged) —
+  // — Modal logic — 
   const screenshots = [
-    'assets/IMG_5914.PNG','assets/IMG_5915.PNG',
-    'assets/IMG_5916.PNG','assets/IMG_5917.PNG',
+    'assets/IMG_5912.PNG','assets/IMG_5913.PNG','assets/IMG_5914.PNG',
+    'assets/IMG_5915.PNG','assets/IMG_5916.PNG','assets/IMG_5917.PNG',
     'assets/IMG_5918.PNG','assets/IMG_5919.PNG'
   ];
   let currentIndex = 0;
   const modal = document.getElementById('carouselModal'),
-        carouselImg = document.getElementById('carouselImage');
+        carouselImage = document.getElementById('carouselImage');
   document.getElementById('thumbnail').addEventListener('click', () => {
     modal.classList.add('open');
-    carouselImg.src = screenshots[currentIndex];
+    carouselImage.src = screenshots[currentIndex];
   });
   document.getElementById('nextImage').addEventListener('click', () => {
     currentIndex = (currentIndex + 1) % screenshots.length;
-    carouselImg.src = screenshots[currentIndex];
+    carouselImage.src = screenshots[currentIndex];
   });
   document.getElementById('closeModal').addEventListener('click', () => {
     modal.classList.remove('open');
   });
 
-  // — Fractal-electric canvas with incremental drawing —
+  // — Fractal-electric canvas — 
   const canvas = document.getElementById('bgCanvas'),
         ctx    = canvas.getContext('2d');
   let W, H;
-  function onResize(){
-    W = canvas.width = window.innerWidth;
+  function resize(){
+    W = canvas.width  = window.innerWidth;
     H = canvas.height = window.innerHeight;
   }
-  window.addEventListener('resize', onResize);
-  onResize();
+  window.addEventListener('resize', resize);
+  resize();
 
-  // Bolt constructor
+  // Bolt class: holds path, branch, timing
   class Bolt {
     constructor(horizontal){
       this.horizontal = horizontal;
-      this.segs = 5;
-      this.len = (horizontal ? W : H)/this.segs;
-      this.pts = [];
-      // Build trunk points
-      let x = horizontal ? 0 : Math.random()*W;
-      let y = horizontal ? Math.random()*H : 0;
-      this.pts.push([x,y]);
-      for(let i=0;i<this.segs;i++){
-        if(horizontal) x += this.len; else y += this.len;
-        this.pts.push([x,y]);
-        // 90° turn drift ±40px
+      this.startTime  = performance.now();
+      this.duration   = 4000; // 4s to travel
+      // build trunk points
+      const segments = 5,
+            len      = (horizontal ? W : H) / segments,
+            pts      = [];
+      let x = horizontal ? 0 : Math.random()*W,
+          y = horizontal ? Math.random()*H : 0;
+      pts.push([x,y]);
+      for(let i=0;i<segments;i++){
+        if(horizontal) x += len;
+        else           y += len;
+        pts.push([x,y]);
         if(horizontal) y += (Math.random()*2-1)*40;
-        else          x += (Math.random()*2-1)*40;
-        this.pts.push([x,y]);
+        else           x += (Math.random()*2-1)*40;
+        pts.push([x,y]);
       }
-      // One branch at random mid
-      const bi = 1 + Math.floor(Math.random()*(this.pts.length-2)),
-            [bx,by] = this.pts[bi];
-      let branchEnd = [bx,by];
-      if(horizontal) branchEnd = [bx, by+this.len*0.4];
-      else          branchEnd = [bx+this.len*0.4, by];
-      this.pts.splice(bi+1,0,branchEnd);
-
-      this.start = performance.now();
-      this.duration = 4000; // 4s to draw
+      this.pts = pts;
+      // choose branch index & end
+      this.branchIdx = 1 + Math.floor(Math.random()*(pts.length-3));
+      const [bx,by] = pts[this.branchIdx];
+      if(horizontal){
+        this.branchEnd = [bx, by + len*0.3];
+      } else {
+        this.branchEnd = [bx + len*0.3, by];
+      }
     }
     draw(now){
-      const t = (now - this.start) / this.duration;
-      if(t>=1) return false; // done
-      const count = Math.floor(this.pts.length * t);
+      const t = (now - this.startTime)/this.duration;
+      if(t<=0) return;
+      // trunk progress
+      const totalSegments = this.pts.length - 1,
+            prog          = Math.min(t,1) * totalSegments,
+            fullSeg       = Math.floor(prog),
+            frac          = prog - fullSeg;
       ctx.beginPath();
-      ctx.moveTo(this.pts[0][0], this.pts[0][1]);
-      for(let i=1;i<=count;i++){
-        const [px,py] = this.pts[i];
-        ctx.lineTo(px,py);
+      ctx.moveTo(...this.pts[0]);
+      // full segments
+      for(let i=0;i<fullSeg;i++){
+        const p = this.pts[i+1];
+        ctx.lineTo(...p);
+      }
+      // partial segment
+      if(fullSeg < totalSegments){
+        const [x1,y1] = this.pts[fullSeg],
+              [x2,y2] = this.pts[fullSeg+1];
+        ctx.lineTo(x1 + (x2-x1)*frac, y1 + (y2-y1)*frac);
       }
       ctx.stroke();
-      return true; // still drawing
+      // branch appears when trunk passes branchIdx
+      if(t > (this.branchIdx/totalSegments)){
+        const branchProg = Math.min((t - (this.branchIdx/totalSegments))*totalSegments,1);
+        const [bx,by] = this.pts[this.branchIdx];
+        const [ex,ey] = this.branchEnd;
+        ctx.beginPath();
+        ctx.moveTo(bx,by);
+        ctx.lineTo(
+          bx + (ex-bx)*branchProg,
+          by + (ey-by)*branchProg
+        );
+        ctx.stroke();
+      }
+    }
+    finished(now){
+      return now - this.startTime > this.duration;
     }
   }
 
-  let bolts = [];
+  const bolts = [];
   let lastSpawn = 0;
-  function animate(ts){
+  function animate(now){
     requestAnimationFrame(animate);
     // clear completely
     ctx.clearRect(0,0,W,H);
-
-    // spawn every 1.5s
-    if(ts - lastSpawn > 1500){
+    // spawn every 1s
+    if(now - lastSpawn > 1000){
       const horiz = Math.random()<0.5;
       bolts.push(new Bolt(horiz));
-      lastSpawn = ts;
+      lastSpawn = now;
     }
-
-    // draw all bolts
+    // draw & cull
     ctx.globalCompositeOperation = 'lighter';
     ctx.strokeStyle = 'rgba(157,78,221,0.8)';
-    ctx.lineWidth = 5;
-    bolts = bolts.filter(b => b.draw(ts));
+    ctx.lineWidth   = 4;
+    bolts.forEach(b=>b.draw(now));
+    // remove finished
+    for(let i=bolts.length-1;i>=0;i--){
+      if(bolts[i].finished(now)) bolts.splice(i,1);
+    }
   }
-  animate();
+  animate(performance.now());
   </script>
 </body>
 </html>
