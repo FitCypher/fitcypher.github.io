@@ -1,16 +1,16 @@
-/* Hide scrollbars but keep scroll */
+/* Hide all scrollbars but keep scrolling */
 html, body {
   margin: 0; padding: 0;
   overflow-y: auto;
-  scrollbar-width: none;       /* Firefox */
-  -ms-overflow-style: none;    /* IE10+ */
+  scrollbar-width: none;    /* Firefox */
+  -ms-overflow-style: none; /* IE10+ */
 }
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
-  display: none;               /* Chrome, Safari, Opera */
+  display: none;            /* Chrome, Safari, Opera */
 }
 
-/* Dark background restored */
+/* Dark page background */
 html, body {
   background: #0f0f2d;
   font-family: 'Poppins', sans-serif;
@@ -49,26 +49,27 @@ html, body {
 /* Responsive card width */
 .card {
   width: 80vw;
-  max-width: 480px;
+  max-width: 400px;  /* smaller on all devices */
 }
-@media (max-width: 400px) {
+@media (max-width: 480px) {
   .card {
-    width: 90vw;
+    width: 95vw;
     padding: 16px;
+    margin: 16px auto;
   }
 }
 
 /* Logo */
 .logo {
-  width: 120px;
-  margin-bottom: 16px;
+  width: 100px;   /* slightly smaller for better fit */
+  margin-bottom: 12px;
 }
 
 /* Tagline styling */
 .tagline {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 300;
-  color: #e0e0e0;
+  color: #ddd;
   margin-bottom: 20px;
   line-height: 1.4;
 }
@@ -81,14 +82,21 @@ html, body {
   text-shadow: 0 0 8px rgba(0,180,216,0.6);
 }
 
-/* Screenshot */
+/* Screenshot smaller */
 .screenshot img {
-  width: 100%;
+  width: 80%;
+  max-width: 280px;
   height: auto;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.4);
   margin-bottom: 16px;
   cursor: pointer;
+}
+@media (max-width: 480px) {
+  .screenshot img {
+    width: 90%;
+    max-width: 240px;
+  }
 }
 
 /* Beta note & CTA */
@@ -100,7 +108,7 @@ html, body {
 .cta-button {
   background: #00b4d8;
   color: white;
-  padding: 10px 16px;
+  padding: 8px 14px;
   border-radius: 8px;
   font-weight: 600;
   text-decoration: none;
@@ -132,8 +140,7 @@ html, body {
   text-align: center;
 }
 .carousel-content img {
-  max-width: 80vw;
-  max-height: 80vh;
+  max-width: 80vw; max-height: 80vh;
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.6);
 }
@@ -153,5 +160,6 @@ html, body {
 #closeModal {
   background: #d00056;
 }
+
 
 
