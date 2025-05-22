@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <!-- Lightning background canvas -->
+  <!-- Lightning background -->
   <canvas id="bgCanvas"></canvas>
 
   <!-- Main card -->
@@ -21,9 +21,7 @@
       <img src="assets/IMG_5912.PNG" alt="App Screenshot"/>
     </div>
     <p class="beta-note">🧪 In development — beta coming soon</p>
-    <a href="https://instagram.com/fitcypher.app"
-       target="_blank"
-       class="cta-button">
+    <a href="https://instagram.com/fitcypher.app" target="_blank" class="cta-button">
       Follow us on Instagram
     </a>
   </div>
@@ -41,69 +39,77 @@
   </div>
 
   <script>
-  // —— Modal Logic ——
+  // —— Modal logic ——
   const screenshots = [
-    'assets/IMG_5912.PNG','assets/IMG_5913.PNG','assets/IMG_5914.PNG',
-    'assets/IMG_5915.PNG','assets/IMG_5916.PNG','assets/IMG_5917.PNG',
-    'assets/IMG_5918.PNG','assets/IMG_5919.PNG'
+    'assets/IMG_5912.PNG',
+    'assets/IMG_5913.PNG',
+    'assets/IMG_5914.PNG',
+    'assets/IMG_5915.PNG',
+    'assets/IMG_5916.PNG',
+    'assets/IMG_5917.PNG',
+    'assets/IMG_5918.PNG',
+    'assets/IMG_5919.PNG'
   ];
-  let idx = 0;
-  const modal = document.getElementById('carouselModal'),
-        imgEl  = document.getElementById('carouselImage');
-  document.getElementById('thumbnail').addEventListener('click', () => {
+  let currentIndex = 0;
+  const modal      = document.getElementById('carouselModal'),
+        carouselEl = document.getElementById('carouselImage'),
+        thumb      = document.getElementById('thumbnail'),
+        nextBtn    = document.getElementById('nextImage'),
+        closeBtn   = document.getElementById('closeModal');
+
+  thumb.addEventListener('click', () => {
     modal.classList.add('open');
-    imgEl.src = screenshots[idx];
+    carouselEl.src = screenshots[currentIndex];
   });
-  document.getElementById('nextImage').addEventListener('click', () => {
-    idx = (idx + 1) % screenshots.length;
-    imgEl.src = screenshots[idx];
+  nextBtn.addEventListener('click', () => {
+    currentIndex = (currentIndex + 1) % screenshots.length;
+    carouselEl.src = screenshots[currentIndex];
   });
-  document.getElementById('closeModal').addEventListener('click', () => {
+  closeBtn.addEventListener('click', () => {
     modal.classList.remove('open');
   });
 
-  // —— Lightning Background ——
+  // —— Lightning canvas ——
   const canvas = document.getElementById('bgCanvas'),
         ctx    = canvas.getContext('2d');
   let W, H;
-  function onResize() {
+  function resize() {
     W = canvas.width  = window.innerWidth;
     H = canvas.height = window.innerHeight;
   }
-  window.addEventListener('resize', onResize);
-  onResize();
+  window.addEventListener('resize', resize);
+  resize();
 
   class Bolt {
     constructor() {
       this.start      = performance.now();
-      this.duration   = 8000; // head runs 8s
+      this.duration   = 8000;
       this.horizontal = Math.random() < 0.5;
       this.color      = Math.random() < 0.5
                        ? 'rgba(157,78,221,0.8)'
                        : 'rgba(0,180,216,0.8)';
-      // generate control points
-      const segs = 5, len = (this.horizontal ? W : H)/segs, pts = [];
+      // build control points
+      const segs = 5,
+            len  = (this.horizontal ? W : H)/segs,
+            pts  = [];
       let x = this.horizontal ? 0 : Math.random()*W,
           y = this.horizontal ? Math.random()*H : 0;
       pts.push([x,y]);
-      for(let i=0;i<segs;i++){
+      for(let i=0; i<segs; i++){
         if(this.horizontal) x+=len; else y+=len;
         pts.push([x,y]);
         if(this.horizontal) y+=(Math.random()*2-1)*40;
         else               x+=(Math.random()*2-1)*40;
         pts.push([x,y]);
       }
-      this.pts = pts;
-      // sample trunk
       this.path = [];
       for(let i=0;i<pts.length-1;i++){
-        const [x1,y1]=pts[i], [x2,y2]=pts[i+1];
+        const [x1,y1] = pts[i], [x2,y2] = pts[i+1];
         for(let t=0;t<60;t++){
           const f = t/60;
-          this.path.push([x1+(x2-x1)*f, y1+(y2-y1)*f]);
+          this.path.push([x1 + (x2-x1)*f, y1 + (y2-y1)*f]);
         }
       }
-      // branch
       this.branchIdx = 1 + Math.floor(Math.random()*(pts.length-2));
       const [bx,by] = pts[this.branchIdx];
       this.branchPts = [[bx,by]];
@@ -116,13 +122,12 @@
       }
     }
     draw(now) {
-      const t     = (now - this.start)/this.duration,
-            total = this.path.length,
-            head  = Math.floor(total * Math.min(t,1)),
-            tailL = Math.floor(total*0.3),
-            tail  = Math.max(0, head - tailL);
-      if(head <= 0) return;
-      // trunk
+      const t      = (now - this.start)/this.duration,
+            total  = this.path.length,
+            head   = Math.floor(total * Math.min(t,1)),
+            tailL  = Math.floor(total * 0.3),
+            tail   = Math.max(0, head - tailL);
+      if(head<=0) return;
       ctx.beginPath();
       ctx.moveTo(...this.path[tail]);
       for(let i=tail+1;i<head;i++){
@@ -132,12 +137,12 @@
       ctx.lineWidth   = 4;
       ctx.stroke();
       // branch
-      const brStart = this.branchIdx/this.pts.length;
-      if(t > brStart){
-        const bt    = (t - brStart)/(1 - brStart),
-              btot  = this.branchPts.length,
-              bh    = Math.floor(btot * Math.min(bt,1)),
-              btIdx = Math.max(0, bh - tailL);
+      const brStart = this.branchIdx/this.path.length;
+      if(t>brStart){
+        const bt     = (t-brStart)/(1-brStart),
+              btot   = this.branchPts.length,
+              bh     = Math.floor(btot * Math.min(bt,1)),
+              btIdx  = Math.max(0, bh - tailL);
         ctx.beginPath();
         ctx.moveTo(...this.branchPts[btIdx]);
         for(let i=btIdx+1;i<bh;i++){
@@ -146,17 +151,17 @@
         ctx.stroke();
       }
     }
-    done(now){
-      return (now - this.start) > (this.duration*1.3);
+    done(now) {
+      return (now - this.start) > this.duration*1.3;
     }
   }
 
-  const bolts = [], spawnInterval = 1000;
-  let last = 0;
+  const bolts = [], spawnInt=1000;
+  let last=0;
   function animate(now){
     requestAnimationFrame(animate);
     ctx.clearRect(0,0,W,H);
-    if(now - last > spawnInterval){
+    if(now - last > spawnInt){
       for(let i=0;i<6;i++) bolts.push(new Bolt());
       last = now;
     }
@@ -169,6 +174,7 @@
   </script>
 </body>
 </html>
+
 
 
 

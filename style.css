@@ -1,16 +1,16 @@
-/* Hide scrollbars but keep scrolling */
+/* Hide all scrollbars but retain scrolling */
 html, body {
   margin: 0; padding: 0;
   overflow-y: auto;
-  scrollbar-width: none;       /* Firefox */
-  -ms-overflow-style: none;    /* IE10+ */
+  scrollbar-width: none;    /* Firefox */
+  -ms-overflow-style: none; /* IE10+ */
 }
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
-  display: none;               /* Chrome, Safari, Opera */
+  display: none;            /* Chrome, Safari, Opera */
 }
 
-/* Lightning canvas */
+/* Lightning canvas behind everything */
 #bgCanvas {
   position: fixed;
   top: 0; left: 0;
@@ -18,7 +18,7 @@ body::-webkit-scrollbar {
   z-index: 0;
 }
 
-/* Card */
+/* Main card */
 .card {
   position: relative;
   z-index: 2;
@@ -26,11 +26,17 @@ body::-webkit-scrollbar {
   border-radius: 20px;
   padding: 24px;
   width: 90%;
-  max-width: 480px;      /* wider so screenshot fits */
-  margin: 20px auto;     /* vertical spacing */
+  max-width: 480px;
+  margin: 20px auto;
   text-align: center;
   box-shadow: 0 16px 40px rgba(0,0,0,0.5);
-  overflow: visible;     /* ensure no inner scrollbar */
+  overflow: visible !important;  /* ensure no internal scroll */
+  /* hide any scrollbar if it ever appears */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.card::-webkit-scrollbar {
+  display: none;
 }
 
 .logo {
@@ -52,7 +58,7 @@ body::-webkit-scrollbar {
   text-shadow: 0 0 6px rgba(0,180,216,0.5);
 }
 
-/* Screenshot fully visible */
+/* Screenshot fully visible, no cropping */
 .screenshot img {
   width: 100%;
   height: auto;
@@ -76,12 +82,13 @@ body::-webkit-scrollbar {
   font-weight: bold;
   text-decoration: none;
   transition: background 0.2s;
+  display: inline-block;
 }
 .cta-button:hover {
   background: #009fc5;
 }
 
-/* Modal */
+/* Modal overlay */
 .carousel-modal {
   position: fixed; inset: 0;
   display: none;
@@ -122,8 +129,3 @@ body::-webkit-scrollbar {
 #closeModal {
   background: #d00056;
 }
-
-
-
-
-
