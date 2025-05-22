@@ -7,14 +7,14 @@
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <!-- Fractal-electricity canvas -->
+  <!-- Canvas for animated electricity -->
   <canvas id="bgCanvas"></canvas>
 
-  <!-- Perfectly centered card -->
+  <!-- Centered content card -->
   <div class="card">
     <img src="assets/logo_transparent.png" class="logo" alt="FitCypher Logo"/>
     <p class="tagline">
-      Track workouts. <span class="glow-purple">Fuel growth.</span> 
+      Track workouts. <span class="glow-purple">Fuel growth.</span>
       <span class="glow-blue">Stay locked in.</span>
     </p>
     <div class="screenshot" id="thumbnail">
@@ -26,7 +26,7 @@
     </a>
   </div>
 
-  <!-- Screenshot modal -->
+  <!-- Modal for cycling screenshots -->
   <div class="carousel-modal" id="carouselModal">
     <div class="carousel-background"></div>
     <div class="carousel-content">
@@ -39,75 +39,95 @@
   </div>
 
   <script>
-    // — Modal logic —
-    const screenshots = [
-      'assets/IMG_5914.PNG','assets/IMG_5915.PNG',
-      'assets/IMG_5916.PNG','assets/IMG_5917.PNG',
-      'assets/IMG_5918.PNG','assets/IMG_5919.PNG'
-    ];
-    let currentIndex = 0;
-    const modal = document.getElementById('carouselModal'),
-          carouselImage = document.getElementById('carouselImage');
-    document.getElementById('thumbnail').addEventListener('click', () => {
-      modal.classList.add('open');
-      carouselImage.src = screenshots[currentIndex];
-    });
-    document.getElementById('nextImage').addEventListener('click', () => {
-      currentIndex = (currentIndex + 1) % screenshots.length;
-      carouselImage.src = screenshots[currentIndex];
-    });
-    document.getElementById('closeModal').addEventListener('click', () => {
-      modal.classList.remove('open');
-    });
+  // ——— Modal Logic ———
+  const screenshots = [
+    'assets/IMG_5914.PNG','assets/IMG_5915.PNG',
+    'assets/IMG_5916.PNG','assets/IMG_5917.PNG',
+    'assets/IMG_5918.PNG','assets/IMG_5919.PNG'
+  ];
+  let currentIndex = 0;
+  const modal = document.getElementById('carouselModal'),
+        carouselImage = document.getElementById('carouselImage');
+  document.getElementById('thumbnail').addEventListener('click', ()=>{
+    modal.classList.add('open');
+    carouselImage.src = screenshots[currentIndex];
+  });
+  document.getElementById('nextImage').addEventListener('click', ()=>{
+    currentIndex = (currentIndex+1)%screenshots.length;
+    carouselImage.src = screenshots[currentIndex];
+  });
+  document.getElementById('closeModal').addEventListener('click', ()=>{
+    modal.classList.remove('open');
+  });
 
-    // — Canvas fractal-electric effect —
-    const canvas = document.getElementById('bgCanvas'),
-          ctx = canvas.getContext('2d');
-    let w, h;
-    function resize() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
+  // ——— Canvas Fractal-Electric Animation ———
+  const canvas = document.getElementById('bgCanvas'),
+        ctx    = canvas.getContext('2d');
+  let w,h;
+  function resize(){
+    w=canvas.width=window.innerWidth;
+    h=canvas.height=window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function drawBoltAndBranch(){
+    const segments = 4;
+    const segH = h/segments;
+    // collect points
+    let pts = [];
+    let x = Math.random()*w, y=0;
+    pts.push([x,y]);
+    for(let i=0;i<segments;i++){
+      y += segH;
+      pts.push([x,y]);
+      x += (Math.random()*2-1)*60;
+      pts.push([x,y]);
     }
-    window.addEventListener('resize', resize);
-    resize();
-
-    // draw one angular “bolt” with 90° turns
-    function drawBolt() {
-      ctx.globalCompositeOperation = 'lighter';
-      ctx.strokeStyle = 'rgba(157,78,221,0.3)';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      // start at random top position
-      let x = Math.random() * w, y = 0;
-      ctx.moveTo(x, y);
-      const segments = 4;
-      const segH = h / segments;
-      for (let i = 0; i < segments; i++) {
-        // vertical line
-        y += segH;
-        ctx.lineTo(x, y);
-        // small horizontal shift
-        x += (Math.random() * 2 - 1) * 60;  // ±60px max
-        ctx.lineTo(x, y);
-      }
-      ctx.stroke();
+    // draw main path
+    ctx.beginPath();
+    ctx.moveTo(pts[0][0], pts[0][1]);
+    for(let i=1;i<pts.length;i++){
+      ctx.lineTo(pts[i][0], pts[i][1]);
     }
+    ctx.stroke();
 
-    let lastTime = 0;
-    function animate(time) {
-      requestAnimationFrame(animate);
-      // fade with slight alpha
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.fillStyle = 'rgba(0,0,0,0.06)';
-      ctx.fillRect(0, 0, w, h);
-
-      // one bolt every 1200ms
-      if (time - lastTime > 1200) {
-        drawBolt();
-        lastTime = time;
-      }
+    // pick a random mid-point to branch
+    const bi = 2 + Math.floor(Math.random()*(pts.length-4));
+    const [bx,by] = pts[bi];
+    // determine branch dir: alternate 90°
+    let branchX=bx, branchY=by;
+    if(bi%2===0){
+      // branch horizontally
+      branchX += (Math.random()*2-1)*segH*0.5;
+    } else {
+      // branch vertically
+      branchY += (Math.random()*2-1)*segH*0.5;
     }
-    animate();
+    ctx.beginPath();
+    ctx.moveTo(bx,by);
+    ctx.lineTo(branchX,branchY);
+    ctx.stroke();
+  }
+
+  let last=0;
+  function animate(t){
+    requestAnimationFrame(animate);
+    // fade old trails
+    ctx.globalCompositeOperation='source-over';
+    ctx.fillStyle='rgba(0,0,0,0.04)';
+    ctx.fillRect(0,0,w,h);
+
+    // draw a bolt every 2000ms
+    if(t-last>2000){
+      ctx.globalCompositeOperation='lighter';
+      ctx.strokeStyle='rgba(157,78,221,0.6)';
+      ctx.lineWidth=4;
+      drawBoltAndBranch();
+      last = t;
+    }
+  }
+  animate();
   </script>
 </body>
 </html>
