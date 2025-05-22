@@ -22,6 +22,7 @@ html, body {
 
 /* Lightning canvas */
 #bgCanvas {
+  background: #0f0f2d;
   position: fixed;
   top: 0; left: 0;
   width: 100vw; height: 100vh;
