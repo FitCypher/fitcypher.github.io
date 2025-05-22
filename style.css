@@ -1,11 +1,15 @@
-/* reset & background */
-body {
+/* page basics & scrollable */
+html, body {
   margin: 0;
+  padding: 0;
   overflow: auto;
   background: #0f0f2d;
   font-family: 'Segoe UI', sans-serif;
   color: white;
+  height: auto;
 }
+
+/* lightning canvas sits behind */
 #bgCanvas {
   position: fixed;
   top: 0; left: 0;
@@ -13,11 +17,11 @@ body {
   z-index: 0;
 }
 
-/* card near top, allows scroll */
+/* card scrolls with page, sits above canvas */
 .card {
   position: relative;
   z-index: 2;
-  margin: 40px auto 100px;
+  margin: 120px auto 120px; /* plenty of top margin to never cut off logo */
   background: #1c1c2c;
   border-radius: 20px;
   padding: 32px;
@@ -73,11 +77,12 @@ body {
   transition: background 0.3s;
   display: inline-block;
 }
+
 .cta-button:hover {
   background: #009fc5;
 }
 
-/* modal */
+/* modal overlay */
 .carousel-modal {
   position: fixed; inset: 0;
   display: none;
@@ -117,6 +122,7 @@ body {
 #closeModal {
   background: #d00056;
 }
+
 
 
 

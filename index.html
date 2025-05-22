@@ -7,10 +7,10 @@
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <!-- Canvas for fractal electricity -->
+  <!-- Full‐screen canvas always behind -->
   <canvas id="bgCanvas"></canvas>
 
-  <!-- Content card -->
+  <!-- Card now in document flow, scrollable -->
   <div class="card">
     <img src="assets/logo_transparent.png" class="logo" alt="FitCypher Logo"/>
     <p class="tagline">
@@ -26,7 +26,7 @@
     </a>
   </div>
 
-  <!-- Screenshot modal -->
+  <!-- Modal carousel -->
   <div class="carousel-modal" id="carouselModal">
     <div class="carousel-background"></div>
     <div class="carousel-content">
@@ -39,7 +39,7 @@
   </div>
 
   <script>
-    // Modal logic
+    // — Modal logic (unchanged) —
     const screenshots = [
       'assets/IMG_5914.PNG','assets/IMG_5915.PNG',
       'assets/IMG_5916.PNG','assets/IMG_5917.PNG',
@@ -60,76 +60,61 @@
       modal.classList.remove('open');
     });
 
-    // Canvas electricity
+    // — Fractal-electric canvas —
     const canvas = document.getElementById('bgCanvas'),
           ctx    = canvas.getContext('2d');
     let w,h;
     function resize(){
-      w = canvas.width  = window.innerWidth;
-      h = canvas.height = window.innerHeight;
+      w=canvas.width=window.innerWidth;
+      h=canvas.height=window.innerHeight;
     }
     window.addEventListener('resize', resize);
     resize();
 
-    function drawFractal(startX, startY, horizontal=false){
-      const segments = 5;
-      const segL     = (horizontal ? w : h)/segments;
-      let x = startX, y = startY;
-      const pts = [[x,y]];
-
-      for(let i=0;i<segments;i++){
-        if(horizontal) x += segL;
-        else           y += segL;
+    function drawFractal(startX,startY,horiz=false){
+      const segs = 5,
+            len  = (horiz ? w : h)/segs,
+            pts  = [[startX,startY]];
+      let x=startX, y=startY;
+      for(let i=0;i<segs;i++){
+        if(horiz) x += len; else y += len;
         pts.push([x,y]);
-        // 90° turn
-        if(horizontal) {
-          y += (Math.random()*2-1)*40;
-        } else {
-          x += (Math.random()*2-1)*40;
-        }
+        if(horiz) y += (Math.random()*2-1)*40;
+        else       x += (Math.random()*2-1)*40;
         pts.push([x,y]);
       }
-      // draw trunk
+      // trunk
       ctx.beginPath();
-      ctx.moveTo(pts[0][0], pts[0][1]);
+      ctx.moveTo(pts[0][0],pts[0][1]);
       pts.slice(1).forEach(p=>ctx.lineTo(p[0],p[1]));
       ctx.stroke();
-
       // one branch
-      const bi = 1 + Math.floor(Math.random()*(pts.length-2));
-      const [bx,by] = pts[bi];
+      const bi = 1 + Math.floor(Math.random()*(pts.length-3)),
+            [bx,by] = pts[bi];
       ctx.beginPath();
       ctx.moveTo(bx,by);
-      if(horizontal) {
-        ctx.lineTo(bx, by + segL*0.4);
-      } else {
-        ctx.lineTo(bx + segL*0.4, by);
-      }
+      if(horiz) ctx.lineTo(bx,by+len*0.4);
+      else      ctx.lineTo(bx+len*0.4,by);
       ctx.stroke();
     }
 
     let last=0;
     function animate(ts){
       requestAnimationFrame(animate);
-      // fade
+      // fade trails
       ctx.globalCompositeOperation='source-over';
       ctx.fillStyle='rgba(0,0,0,0.05)';
       ctx.fillRect(0,0,w,h);
-
-      // every 1s draw either vertical or horizontal
-      if(ts - last > 1000){
+      // bolt every 1s
+      if(ts-last>1000){
         ctx.globalCompositeOperation='lighter';
         ctx.strokeStyle='rgba(157,78,221,0.8)';
-        ctx.lineWidth = 4;
-
-        if(Math.random()<0.5){
-          // vertical from top
-          drawFractal(Math.random()*w, 0, false);
-        } else {
-          // horizontal from left
-          drawFractal(0, Math.random()*h, true);
-        }
-        last = ts;
+        ctx.lineWidth=4;
+        if(Math.random()<0.5)
+          drawFractal(Math.random()*w,0,false);
+        else
+          drawFractal(0,Math.random()*h,true);
+        last=ts;
       }
     }
     animate();
