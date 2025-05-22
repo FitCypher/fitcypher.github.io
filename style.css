@@ -1,4 +1,4 @@
-/* allow scroll if card ever overflows, but card now fits */
+/* allow vertical scroll if needed */
 html, body {
   margin: 0; padding: 0;
   overflow-y: auto;
@@ -11,7 +11,7 @@ html, body {
   align-items: flex-start; /* card at top */
 }
 
-/* lightning behind */
+/* lightning background */
 #bgCanvas {
   position: fixed;
   top: 0; left: 0;
@@ -19,7 +19,7 @@ html, body {
   z-index: 0;
 }
 
-/* card always visible, no scroll needed */
+/* card */
 .card {
   position: relative;
   z-index: 2;
@@ -27,7 +27,7 @@ html, body {
   border-radius: 20px;
   padding: 24px;
   width: 360px;
-  margin-top: 20px;
+  margin: 20px auto;
   text-align: center;
   box-shadow: 0 16px 40px rgba(0,0,0,0.5);
 }
@@ -51,11 +51,10 @@ html, body {
   text-shadow: 0 0 6px rgba(0,180,216,0.5);
 }
 
-/* make the screenshot smaller so it fits fully */
+/* screenshot fully shown */
 .screenshot img {
   width: 100%;
-  max-height: 120px;
-  object-fit: cover;
+  height: auto;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.4);
   margin-bottom: 16px;
@@ -122,5 +121,6 @@ html, body {
 #closeModal {
   background: #d00056;
 }
+
 
 
