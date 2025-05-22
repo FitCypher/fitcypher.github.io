@@ -7,10 +7,10 @@
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <!-- Animated electricity background -->
+  <!-- Fractal-electricity canvas -->
   <canvas id="bgCanvas"></canvas>
 
-  <!-- Centered content card -->
+  <!-- Perfectly centered card -->
   <div class="card">
     <img src="assets/logo_transparent.png" class="logo" alt="FitCypher Logo"/>
     <p class="tagline">
@@ -26,7 +26,7 @@
     </a>
   </div>
 
-  <!-- Modal for screenshot cycling -->
+  <!-- Screenshot modal -->
   <div class="carousel-modal" id="carouselModal">
     <div class="carousel-background"></div>
     <div class="carousel-content">
@@ -39,73 +39,75 @@
   </div>
 
   <script>
-  // ——— Modal Logic ———
-  const screenshots = [
-    'assets/IMG_5914.PNG','assets/IMG_5915.PNG',
-    'assets/IMG_5916.PNG','assets/IMG_5917.PNG',
-    'assets/IMG_5918.PNG','assets/IMG_5919.PNG'
-  ];
-  let currentIndex = 0;
-  const modal = document.getElementById('carouselModal'),
-        carouselImage = document.getElementById('carouselImage');
-  document.getElementById('thumbnail').addEventListener('click', ()=>{
-    modal.classList.add('open');
-    carouselImage.src = screenshots[currentIndex];
-  });
-  document.getElementById('nextImage').addEventListener('click', ()=>{
-    currentIndex = (currentIndex+1)%screenshots.length;
-    carouselImage.src = screenshots[currentIndex];
-  });
-  document.getElementById('closeModal').addEventListener('click', ()=>{
-    modal.classList.remove('open');
-  });
+    // — Modal logic —
+    const screenshots = [
+      'assets/IMG_5914.PNG','assets/IMG_5915.PNG',
+      'assets/IMG_5916.PNG','assets/IMG_5917.PNG',
+      'assets/IMG_5918.PNG','assets/IMG_5919.PNG'
+    ];
+    let currentIndex = 0;
+    const modal = document.getElementById('carouselModal'),
+          carouselImage = document.getElementById('carouselImage');
+    document.getElementById('thumbnail').addEventListener('click', () => {
+      modal.classList.add('open');
+      carouselImage.src = screenshots[currentIndex];
+    });
+    document.getElementById('nextImage').addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % screenshots.length;
+      carouselImage.src = screenshots[currentIndex];
+    });
+    document.getElementById('closeModal').addEventListener('click', () => {
+      modal.classList.remove('open');
+    });
 
-  // ——— Canvas Fractal-Electric Animation ———
-  const canvas = document.getElementById('bgCanvas'),
-        ctx = canvas.getContext('2d');
-  let w,h;
-  function resize(){
-    w=canvas.width=window.innerWidth;
-    h=canvas.height=window.innerHeight;
-  }
-  window.addEventListener('resize', resize);
-  resize();
-
-  function drawCircuitBolt(){
-    const segments = 6;
-    const segH = h/segments;
-    let x = Math.random()*w, y=0;
-    ctx.beginPath();
-    ctx.moveTo(x,y);
-    for(let i=0;i<segments;i++){
-      y += segH;
-      ctx.lineTo(x,y);
-      // 90° turn
-      const dx = (Math.random()*2-1)*150;
-      x += dx;
-      ctx.lineTo(x,y);
+    // — Canvas fractal-electric effect —
+    const canvas = document.getElementById('bgCanvas'),
+          ctx = canvas.getContext('2d');
+    let w, h;
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
     }
-    ctx.stroke();
-  }
+    window.addEventListener('resize', resize);
+    resize();
 
-  let lastTime = 0;
-  function animate(time){
-    requestAnimationFrame(animate);
-    // fade old frame
-    ctx.globalCompositeOperation='source-over';
-    ctx.fillStyle='rgba(0,0,0,0.08)';
-    ctx.fillRect(0,0,w,h);
-
-    // draw bolt only every 300ms
-    if(time - lastTime > 300){
-      ctx.globalCompositeOperation='lighter';
-      ctx.strokeStyle='rgba(157,78,221,0.4)';
-      ctx.lineWidth=2;
-      drawCircuitBolt();
-      lastTime = time;
+    // draw one angular “bolt” with 90° turns
+    function drawBolt() {
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.strokeStyle = 'rgba(157,78,221,0.3)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      // start at random top position
+      let x = Math.random() * w, y = 0;
+      ctx.moveTo(x, y);
+      const segments = 4;
+      const segH = h / segments;
+      for (let i = 0; i < segments; i++) {
+        // vertical line
+        y += segH;
+        ctx.lineTo(x, y);
+        // small horizontal shift
+        x += (Math.random() * 2 - 1) * 60;  // ±60px max
+        ctx.lineTo(x, y);
+      }
+      ctx.stroke();
     }
-  }
-  animate();
+
+    let lastTime = 0;
+    function animate(time) {
+      requestAnimationFrame(animate);
+      // fade with slight alpha
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = 'rgba(0,0,0,0.06)';
+      ctx.fillRect(0, 0, w, h);
+
+      // one bolt every 1200ms
+      if (time - lastTime > 1200) {
+        drawBolt();
+        lastTime = time;
+      }
+    }
+    animate();
   </script>
 </body>
 </html>

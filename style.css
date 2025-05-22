@@ -1,4 +1,4 @@
-/* Reset & background */
+/* page reset */
 body {
   margin: 0;
   overflow: hidden;
@@ -6,6 +6,8 @@ body {
   font-family: 'Segoe UI', sans-serif;
   color: white;
 }
+
+/* full‐screen lightning canvas */
 #bgCanvas {
   position: fixed;
   top: 0; left: 0;
@@ -13,18 +15,16 @@ body {
   z-index: 0;
 }
 
-/* Center the card lower (60% down) */
+/* perfectly centered card */
 .card {
   position: absolute;
-  top: 60%;
-  left: 50%;
-  transform: translate(-50%, -60%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
   z-index: 2;
   background: rgba(28,28,44,0.85);
   border-radius: 20px;
   padding: 32px;
-  max-width: 400px;
-  width: 90%;
+  max-width: 400px; width: 90%;
   text-align: center;
   box-shadow: 0 16px 40px rgba(0,0,0,0.5);
 }
@@ -79,12 +79,11 @@ body {
   background: #009fc5;
 }
 
-/* Modal */
+/* modal */
 .carousel-modal {
   position: fixed; inset: 0;
   display: none;
-  justify-content: center;
-  align-items: center;
+  align-items: center; justify-content: center;
   z-index: 9999;
 }
 .carousel-modal.open {
