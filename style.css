@@ -50,9 +50,9 @@ html, body {
 /* Responsive card width */
 .card {
   width: 80vw;
-  max-width: 400px;  /* smaller on all devices */
+  max-width: 600px;  /* smaller on all devices */
 }
-@media (max-width: 480px) {
+@media (max-width: 600px) {
   .card {
     width: 95vw;
     padding: 16px;
@@ -63,7 +63,7 @@ html, body {
 /* Logo */
 .logo {
   width: 100px;   /* slightly smaller for better fit */
-  margin-bottom: 12px;
+  margin-bottom: 6px;
 }
 
 /* Tagline styling */
