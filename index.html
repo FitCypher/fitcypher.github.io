@@ -7,10 +7,10 @@
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <!-- Canvas for fractal-electric animation -->
+  <!-- Lightning canvas -->
   <canvas id="bgCanvas"></canvas>
 
-  <!-- Main card (scrollable, always shows logo & slogan) -->
+  <!-- Centered Card -->
   <div class="card">
     <img src="assets/logo_transparent.png" class="logo" alt="FitCypher Logo"/>
     <p class="tagline">
@@ -18,7 +18,6 @@
       <span class="glow-blue">Stay locked in.</span>
     </p>
     <div class="screenshot" id="thumbnail">
-      <!-- lowest number image as thumbnail -->
       <img src="assets/IMG_5912.PNG" alt="App Screenshot"/>
     </div>
     <p class="beta-note">🧪 In development — beta coming soon</p>
@@ -40,7 +39,7 @@
   </div>
 
   <script>
-  // — Modal logic — 
+  // —— Modal logic ——
   const screenshots = [
     'assets/IMG_5912.PNG','assets/IMG_5913.PNG','assets/IMG_5914.PNG',
     'assets/IMG_5915.PNG','assets/IMG_5916.PNG','assets/IMG_5917.PNG',
@@ -48,23 +47,23 @@
   ];
   let currentIndex = 0;
   const modal = document.getElementById('carouselModal'),
-        carouselImage = document.getElementById('carouselImage');
+        imgEl = document.getElementById('carouselImage');
   document.getElementById('thumbnail').addEventListener('click', () => {
     modal.classList.add('open');
-    carouselImage.src = screenshots[currentIndex];
+    imgEl.src = screenshots[currentIndex];
   });
   document.getElementById('nextImage').addEventListener('click', () => {
     currentIndex = (currentIndex + 1) % screenshots.length;
-    carouselImage.src = screenshots[currentIndex];
+    imgEl.src = screenshots[currentIndex];
   });
   document.getElementById('closeModal').addEventListener('click', () => {
     modal.classList.remove('open');
   });
 
-  // — Fractal-electric canvas — 
+  // —— Smooth fractal-electric animation ——
   const canvas = document.getElementById('bgCanvas'),
         ctx    = canvas.getContext('2d');
-  let W, H;
+  let W,H;
   function resize(){
     W = canvas.width  = window.innerWidth;
     H = canvas.height = window.innerHeight;
@@ -72,104 +71,110 @@
   window.addEventListener('resize', resize);
   resize();
 
-  // Bolt class: holds path, branch, timing
+  // Precompute a bolt path (trunk+two branches) as arrays of points
   class Bolt {
-    constructor(horizontal){
-      this.horizontal = horizontal;
-      this.startTime  = performance.now();
-      this.duration   = 4000; // 4s to travel
-      // build trunk points
-      const segments = 5,
-            len      = (horizontal ? W : H) / segments,
-            pts      = [];
-      let x = horizontal ? 0 : Math.random()*W,
-          y = horizontal ? Math.random()*H : 0;
+    constructor(){
+      // choose orientation
+      this.horizontal = Math.random() < 0.5;
+      // choose color
+      const purple = 'rgba(157,78,221,0.8)',
+            teal   = 'rgba(0,180,216,0.8)';
+      this.color = Math.random()<0.5 ? purple : teal;
+      // timing
+      this.start  = performance.now();
+      this.dur    = 8000; // 8s travel
+      // build control points
+      const segs = 5,
+            len  = this.horizontal ? W/segs : H/segs,
+            pts  = [];
+      let x = this.horizontal ? 0 : Math.random()*W,
+          y = this.horizontal ? Math.random()*H : 0;
       pts.push([x,y]);
-      for(let i=0;i<segments;i++){
-        if(horizontal) x += len;
-        else           y += len;
+      for(let i=0; i<segs; i++){
+        if(this.horizontal) x += len; else y += len;
         pts.push([x,y]);
-        if(horizontal) y += (Math.random()*2-1)*40;
-        else           x += (Math.random()*2-1)*40;
+        if(this.horizontal) y += (Math.random()*2-1)*40;
+        else               x += (Math.random()*2-1)*40;
         pts.push([x,y]);
       }
       this.pts = pts;
-      // choose branch index & end
-      this.branchIdx = 1 + Math.floor(Math.random()*(pts.length-3));
+      // branch
+      this.branchIdx = 1 + Math.floor(Math.random()*(pts.length-2));
       const [bx,by] = pts[this.branchIdx];
-      if(horizontal){
-        this.branchEnd = [bx, by + len*0.3];
+      if(this.horizontal){
+        this.branchPts = [[bx,by]];
+        for(let t=1;t<=30;t++){
+          const yy = by + (len*0.3)* (t/30);
+          this.branchPts.push([bx, yy]);
+        }
       } else {
-        this.branchEnd = [bx + len*0.3, by];
+        this.branchPts = [[bx,by]];
+        for(let t=1;t<=30;t++){
+          const xx = bx + (len*0.3)* (t/30);
+          this.branchPts.push([xx, by]);
+        }
+      }
+      // sample trunk into many points
+      this.path = [];
+      for(let i=0;i<pts.length-1;i++){
+        const [x1,y1]=pts[i], [x2,y2]=pts[i+1];
+        for(let t=0;t<50;t++){
+          const f=t/50;
+          this.path.push([ x1 + (x2-x1)*f, y1 + (y2-y1)*f ]);
+        }
       }
     }
     draw(now){
-      const t = (now - this.startTime)/this.duration;
+      const t = (now - this.start)/this.dur;
       if(t<=0) return;
-      // trunk progress
-      const totalSegments = this.pts.length - 1,
-            prog          = Math.min(t,1) * totalSegments,
-            fullSeg       = Math.floor(prog),
-            frac          = prog - fullSeg;
+      // draw trunk
+      const total = this.path.length,
+            upTo  = Math.min( Math.floor(total * t), total );
       ctx.beginPath();
-      ctx.moveTo(...this.pts[0]);
-      // full segments
-      for(let i=0;i<fullSeg;i++){
-        const p = this.pts[i+1];
-        ctx.lineTo(...p);
+      ctx.moveTo(...this.path[0]);
+      for(let i=1;i<upTo;i++){
+        ctx.lineTo(...this.path[i]);
       }
-      // partial segment
-      if(fullSeg < totalSegments){
-        const [x1,y1] = this.pts[fullSeg],
-              [x2,y2] = this.pts[fullSeg+1];
-        ctx.lineTo(x1 + (x2-x1)*frac, y1 + (y2-y1)*frac);
-      }
+      ctx.strokeStyle = this.color;
+      ctx.lineWidth   = 4;
       ctx.stroke();
-      // branch appears when trunk passes branchIdx
-      if(t > (this.branchIdx/totalSegments)){
-        const branchProg = Math.min((t - (this.branchIdx/totalSegments))*totalSegments,1);
-        const [bx,by] = this.pts[this.branchIdx];
-        const [ex,ey] = this.branchEnd;
+      // draw branch once trunk passed
+      const brStart = (this.branchIdx/this.pts.length);
+      if(t > brStart){
+        const bt = (t - brStart)/(1 - brStart);
+        const btotal = this.branchPts.length,
+              bUp     = Math.min( Math.floor(btotal * bt), btotal );
         ctx.beginPath();
-        ctx.moveTo(bx,by);
-        ctx.lineTo(
-          bx + (ex-bx)*branchProg,
-          by + (ey-by)*branchProg
-        );
+        ctx.moveTo(...this.branchPts[0]);
+        for(let i=1;i<bUp;i++){
+          ctx.lineTo(...this.branchPts[i]);
+        }
         ctx.stroke();
       }
     }
-    finished(now){
-      return now - this.startTime > this.duration;
+    isDone(now){
+      return now - this.start > this.dur;
     }
   }
 
   const bolts = [];
   let lastSpawn = 0;
-  function animate(now){
-    requestAnimationFrame(animate);
-    // clear completely
+  function loop(now){
+    requestAnimationFrame(loop);
+    // clear entire canvas each frame
     ctx.clearRect(0,0,W,H);
-    // spawn every 1s
-    if(now - lastSpawn > 1000){
-      const horiz = Math.random()<0.5;
-      bolts.push(new Bolt(horiz));
+    // spawn every 1.2s
+    if(now - lastSpawn > 1200){
+      bolts.push(new Bolt());
       lastSpawn = now;
     }
-    // draw & cull
-    ctx.globalCompositeOperation = 'lighter';
-    ctx.strokeStyle = 'rgba(157,78,221,0.8)';
-    ctx.lineWidth   = 4;
+    // draw and remove finished
     bolts.forEach(b=>b.draw(now));
-    // remove finished
     for(let i=bolts.length-1;i>=0;i--){
-      if(bolts[i].finished(now)) bolts.splice(i,1);
+      if(bolts[i].isDone(now)) bolts.splice(i,1);
     }
   }
-  animate(performance.now());
+  loop(performance.now());
   </script>
 </body>
 </html>
-
-
-
