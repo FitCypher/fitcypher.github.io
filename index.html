@@ -12,20 +12,20 @@
       <img src="assets/logo_transparent.png" alt="FitCypher Logo" class="logo" />
       <p class="tagline">Track workouts. Fuel growth. Stay locked in.</p>
 
-      <!-- Thumbnail trigger -->
+      <!-- Screenshot Thumbnail -->
       <div class="screenshot-thumbnail" id="thumbnail">
-        <img src="assets/IMG_5914.PNG" alt="Preview Screenshot" />
+        <img src="assets/IMG_5914.PNG" alt="App Screenshot" />
       </div>
 
       <!-- Modal -->
       <div class="carousel-modal" id="carouselModal">
         <div class="carousel-background"></div>
         <div class="carousel-content">
-          <div class="carousel-wrapper" id="carouselWrapper">
-            <!-- Slides will be injected by JS -->
+          <img id="carouselImage" src="assets/IMG_5914.PNG" alt="Slide" />
+          <div class="carousel-buttons">
+            <button id="nextImage">▶</button>
+            <button id="closeModal">✕</button>
           </div>
-          <button id="nextImage">▶</button>
-          <button id="closeModal">✕</button>
         </div>
       </div>
 
@@ -50,39 +50,25 @@
 
     const thumbnail = document.getElementById('thumbnail');
     const modal = document.getElementById('carouselModal');
-    const wrapper = document.getElementById('carouselWrapper');
+    const image = document.getElementById('carouselImage');
     const nextBtn = document.getElementById('nextImage');
     const closeBtn = document.getElementById('closeModal');
 
-    // Inject images into carousel
-    screenshots.forEach((src, index) => {
-      const img = document.createElement('img');
-      img.src = src;
-      img.className = 'carousel-slide';
-      if (index === 0) img.classList.add('active');
-      wrapper.appendChild(img);
-    });
-
-    const updateSlides = () => {
-      const slides = document.querySelectorAll('.carousel-slide');
-      slides.forEach((slide, idx) => {
-        slide.classList.remove('active');
-        if (idx === currentIndex) slide.classList.add('active');
-      });
-    };
-
     thumbnail.addEventListener('click', () => {
       modal.classList.add('open');
-      updateSlides();
-    });
-
-    closeBtn.addEventListener('click', () => {
-      modal.classList.remove('open');
+      image.src = screenshots[currentIndex];
     });
 
     nextBtn.addEventListener('click', () => {
       currentIndex = (currentIndex + 1) % screenshots.length;
-      updateSlides();
+      image.classList.remove('fade-in');
+      void image.offsetWidth; // Force reflow
+      image.src = screenshots[currentIndex];
+      image.classList.add('fade-in');
+    });
+
+    closeBtn.addEventListener('click', () => {
+      modal.classList.remove('open');
     });
   </script>
 </body>
