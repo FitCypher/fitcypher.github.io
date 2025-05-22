@@ -8,36 +8,49 @@
 </head>
 <body>
   <div class="background">
-    <!-- Circuit Background -->
+    
+    <!-- SVG Circuit Pattern -->
     <svg class="circuit-overlay" viewBox="0 0 800 600" preserveAspectRatio="none">
-      <g stroke-width="1.5" fill="none">
-        <path d="M50 100 L200 100 L200 200 L400 200" stroke="#9d4edd"/>
-        <path d="M100 300 L300 300 L300 400 L600 400" stroke="#00b4d8"/>
-        <path d="M50 500 L250 500 L250 350 L550 350" stroke="#9d4edd"/>
+      <defs>
+        <linearGradient id="glowLine" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#9d4edd">
+            <animate attributeName="stop-color" values="#9d4edd;#00b4d8;#9d4edd" dur="4s" repeatCount="indefinite" />
+          </stop>
+          <stop offset="100%" stop-color="#00b4d8">
+            <animate attributeName="stop-color" values="#00b4d8;#9d4edd;#00b4d8" dur="4s" repeatCount="indefinite" />
+          </stop>
+        </linearGradient>
+      </defs>
+      <g stroke="url(#glowLine)" stroke-width="1.5" fill="none">
+        <path d="M50 100 L200 100 L200 200 L400 200" />
+        <path d="M100 300 L300 300 L300 400 L600 400" />
+        <path d="M50 500 L250 500 L250 350 L550 350" />
         <circle cx="200" cy="100" r="4" fill="#9d4edd"/>
         <circle cx="300" cy="400" r="4" fill="#00b4d8"/>
         <circle cx="250" cy="500" r="4" fill="#9d4edd"/>
       </g>
     </svg>
 
-    <!-- Card -->
+    <!-- Main Content -->
     <div class="card">
       <img src="assets/logo_transparent.png" class="logo" alt="FitCypher Logo" />
       <p class="tagline">
         Track workouts. <span class="glow-purple">Fuel growth.</span> <span class="glow-blue">Stay locked in.</span>
       </p>
-      <!-- Clickable Screenshot -->
+
       <div class="screenshot" id="thumbnail">
         <img src="assets/IMG_5914.PNG" alt="App Screenshot" />
       </div>
+
       <p class="beta-note">🧪 In development — beta coming soon</p>
+
       <a href="https://instagram.com/fitcypher.app" target="_blank" class="cta-button">
         Follow us on Instagram
       </a>
     </div>
   </div>
 
-  <!-- Modal Carousel -->
+  <!-- Modal -->
   <div class="carousel-modal" id="carouselModal">
     <div class="carousel-background"></div>
     <div class="carousel-content">
@@ -49,7 +62,6 @@
     </div>
   </div>
 
-  <!-- JavaScript -->
   <script>
     const screenshots = [
       'assets/IMG_5914.PNG',
@@ -59,20 +71,18 @@
       'assets/IMG_5918.PNG',
       'assets/IMG_5919.PNG',
     ];
-
     let currentIndex = 0;
-
     const modal = document.getElementById('carouselModal');
-    const carouselImage = document.getElementById('carouselImage');
+    const image = document.getElementById('carouselImage');
 
     document.getElementById('thumbnail').addEventListener('click', () => {
       modal.classList.add('open');
-      carouselImage.src = screenshots[currentIndex];
+      image.src = screenshots[currentIndex];
     });
 
     document.getElementById('nextImage').addEventListener('click', () => {
       currentIndex = (currentIndex + 1) % screenshots.length;
-      carouselImage.src = screenshots[currentIndex];
+      image.src = screenshots[currentIndex];
     });
 
     document.getElementById('closeModal').addEventListener('click', () => {
