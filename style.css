@@ -1,12 +1,15 @@
-/* allow entire page to show the card */
+/* ensure full‐screen fit, card at top */
 html, body {
-  margin: 0; padding: 0;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
   background: #0f0f2d;
   font-family: 'Segoe UI', sans-serif;
   color: white;
   height: 100vh;
-  display: flex; justify-content: center; align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 /* canvas behind */
@@ -17,7 +20,7 @@ html, body {
   z-index: 0;
 }
 
-/* card sits fully centered, no scroll */
+/* card always fully visible */
 .card {
   position: relative;
   z-index: 2;
@@ -25,29 +28,21 @@ html, body {
   border-radius: 20px;
   padding: 24px;
   width: 360px;
+  margin-top: 20px;
   text-align: center;
   box-shadow: 0 16px 40px rgba(0,0,0,0.5);
 }
 
-/* shrink screenshot */
 .logo {
   width: 100px;
   margin-bottom: 12px;
 }
+
 .tagline {
   font-size: 16px;
   margin-bottom: 16px;
 }
-.screenshot img {
-  width: 100%;
-  max-height: 180px;
-  object-fit: cover;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-  margin-bottom: 16px;
-}
 
-/* tagline glow */
 .glow-purple {
   color: #9d4edd;
   text-shadow: 0 0 6px rgba(157,78,221,0.5);
@@ -55,6 +50,17 @@ html, body {
 .glow-blue {
   color: #00b4d8;
   text-shadow: 0 0 6px rgba(0,180,216,0.5);
+}
+
+/* smaller screenshot so card fits */
+.screenshot img {
+  width: 100%;
+  max-height: 150px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  margin-bottom: 16px;
+  cursor: pointer;
 }
 
 .beta-note {
@@ -71,6 +77,7 @@ html, body {
   font-weight: bold;
   text-decoration: none;
   transition: background 0.2s;
+  display: inline-block;
 }
 .cta-button:hover {
   background: #009fc5;
@@ -93,8 +100,7 @@ html, body {
   z-index: 1;
 }
 .carousel-content {
-  position: relative; z-index: 2;
-  text-align: center;
+  position: relative; z-index: 2; text-align: center;
 }
 .carousel-content img {
   max-width: 80vw; max-height: 80vh;
@@ -117,3 +123,4 @@ html, body {
 #closeModal {
   background: #d00056;
 }
+
