@@ -1,27 +1,30 @@
-/* Reset & bg */
+/* base reset & centering */
 body {
   margin: 0;
   overflow: hidden;
-  background: #0f0f2d;
-  font-family: 'Segoe UI', sans-serif;
-  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
+  background: #0f0f2d;
+  font-family: 'Segoe UI', sans-serif;
+  color: white;
 }
+
+/* full-screen canvas */
 #bgCanvas {
   position: fixed;
   top: 0; left: 0;
-  width: 100vw; height: 100vh;
+  width: 100vw;
+  height: 100vh;
   z-index: 0;
 }
 
-/* Centered card */
+/* card always front & perfectly centered */
 .card {
   position: relative;
   z-index: 2;
-  background: rgba(28,28,44,0.85);
+  background: #1c1c2c;           /* solid, no transparency */
   border-radius: 20px;
   padding: 32px;
   max-width: 400px;
@@ -34,19 +37,23 @@ body {
   width: 120px;
   margin-bottom: 16px;
 }
+
 .tagline {
   font-size: 18px;
   line-height: 1.5;
   margin-bottom: 20px;
 }
+
 .glow-purple {
   color: #9d4edd;
   text-shadow: 0 0 8px rgba(157,78,221,0.5);
 }
+
 .glow-blue {
   color: #00b4d8;
   text-shadow: 0 0 8px rgba(0,180,216,0.5);
 }
+
 .screenshot img {
   width: 100%;
   border-radius: 16px;
@@ -54,12 +61,14 @@ body {
   margin-bottom: 16px;
   cursor: pointer;
 }
+
 .beta-note {
   color: #aaa;
   font-style: italic;
   font-size: 13px;
   margin-bottom: 12px;
 }
+
 .cta-button {
   background: #00b4d8;
   color: white;
@@ -67,14 +76,14 @@ body {
   border-radius: 10px;
   font-weight: bold;
   text-decoration: none;
-  display: inline-block;
   transition: background 0.3s;
+  display: inline-block;
 }
 .cta-button:hover {
   background: #009fc5;
 }
 
-/* Modal */
+/* modal overlay */
 .carousel-modal {
   position: fixed; inset: 0;
   display: none;
@@ -91,7 +100,8 @@ body {
   z-index: 1;
 }
 .carousel-content {
-  position: relative; z-index: 2; text-align: center;
+  position: relative; z-index: 2;
+  text-align: center;
 }
 .carousel-content img {
   max-width: 90vw; max-height: 80vh;
@@ -100,7 +110,8 @@ body {
 }
 .carousel-buttons {
   margin-top: 20px;
-  display: flex; gap: 10px; justify-content: center;
+  display: flex; gap: 10px;
+  justify-content: center;
 }
 .carousel-buttons button {
   font-size: 20px;
@@ -114,6 +125,7 @@ body {
 #closeModal {
   background: #d00056;
 }
+
 
 
 
