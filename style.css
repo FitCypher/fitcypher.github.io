@@ -1,18 +1,17 @@
-/* ensure full‐screen fit, card at top */
+/* allow scroll if card ever overflows, but card now fits */
 html, body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
+  margin: 0; padding: 0;
+  overflow-y: auto;
   background: #0f0f2d;
   font-family: 'Segoe UI', sans-serif;
   color: white;
   height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: flex-start; /* card at top */
 }
 
-/* canvas behind */
+/* lightning behind */
 #bgCanvas {
   position: fixed;
   top: 0; left: 0;
@@ -20,7 +19,7 @@ html, body {
   z-index: 0;
 }
 
-/* card always fully visible */
+/* card always visible, no scroll needed */
 .card {
   position: relative;
   z-index: 2;
@@ -52,10 +51,10 @@ html, body {
   text-shadow: 0 0 6px rgba(0,180,216,0.5);
 }
 
-/* smaller screenshot so card fits */
+/* make the screenshot smaller so it fits fully */
 .screenshot img {
   width: 100%;
-  max-height: 150px;
+  max-height: 120px;
   object-fit: cover;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.4);
@@ -83,7 +82,7 @@ html, body {
   background: #009fc5;
 }
 
-/* modal */
+/* modal overlay */
 .carousel-modal {
   position: fixed; inset: 0;
   display: none;
@@ -123,4 +122,5 @@ html, body {
 #closeModal {
   background: #d00056;
 }
+
 
