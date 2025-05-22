@@ -8,6 +8,7 @@
 </head>
 <body>
   <div class="background">
+    <!-- Circuit Background -->
     <svg class="circuit-overlay" viewBox="0 0 800 600" preserveAspectRatio="none">
       <g stroke-width="1.5" fill="none">
         <path d="M50 100 L200 100 L200 200 L400 200" stroke="#9d4edd"/>
@@ -18,12 +19,15 @@
         <circle cx="250" cy="500" r="4" fill="#9d4edd"/>
       </g>
     </svg>
+
+    <!-- Card -->
     <div class="card">
       <img src="assets/logo_transparent.png" class="logo" alt="FitCypher Logo" />
       <p class="tagline">
         Track workouts. <span class="glow-purple">Fuel growth.</span> <span class="glow-blue">Stay locked in.</span>
       </p>
-      <div class="screenshot">
+      <!-- Clickable Screenshot -->
+      <div class="screenshot" id="thumbnail">
         <img src="assets/IMG_5914.PNG" alt="App Screenshot" />
       </div>
       <p class="beta-note">🧪 In development — beta coming soon</p>
@@ -32,9 +36,51 @@
       </a>
     </div>
   </div>
+
+  <!-- Modal Carousel -->
+  <div class="carousel-modal" id="carouselModal">
+    <div class="carousel-background"></div>
+    <div class="carousel-content">
+      <img id="carouselImage" src="assets/IMG_5914.PNG" alt="Screenshot" />
+      <div class="carousel-buttons">
+        <button id="nextImage">▶</button>
+        <button id="closeModal">✕</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    const screenshots = [
+      'assets/IMG_5914.PNG',
+      'assets/IMG_5915.PNG',
+      'assets/IMG_5916.PNG',
+      'assets/IMG_5917.PNG',
+      'assets/IMG_5918.PNG',
+      'assets/IMG_5919.PNG',
+    ];
+
+    let currentIndex = 0;
+
+    const modal = document.getElementById('carouselModal');
+    const carouselImage = document.getElementById('carouselImage');
+
+    document.getElementById('thumbnail').addEventListener('click', () => {
+      modal.classList.add('open');
+      carouselImage.src = screenshots[currentIndex];
+    });
+
+    document.getElementById('nextImage').addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % screenshots.length;
+      carouselImage.src = screenshots[currentIndex];
+    });
+
+    document.getElementById('closeModal').addEventListener('click', () => {
+      modal.classList.remove('open');
+    });
+  </script>
 </body>
 </html>
-
 
 
 

@@ -100,6 +100,61 @@ body {
 .cta-button:hover {
   background: #009fc5;
 }
+/* MODAL STYLING */
+.carousel-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.carousel-modal.open {
+  display: flex;
+}
+
+.carousel-background {
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(14px);
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1;
+}
+
+.carousel-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.carousel-content img {
+  max-width: 90vw;
+  max-height: 80vh;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+.carousel-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.carousel-buttons button {
+  font-size: 20px;
+  background: #9d4edd;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+#closeModal {
+  background: #d00056;
+}
 
 
 
