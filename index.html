@@ -13,38 +13,54 @@
 
         <p class="tagline">Track workouts. Fuel growth. Stay locked in.</p>
 
+        <!-- Screenshot Carousel -->
         <div class="screenshot-carousel">
-          <img id="carousel-image" src="assets/IMG_5914.PNG" alt="App Screenshot" />
+          <img
+            id="carousel-image"
+            src="assets/IMG_5914.PNG"
+            alt="App Screenshot"
+          />
           <button id="next-button">▶</button>
         </div>
 
-
         <p class="beta-note">🧪 In development — beta coming soon</p>
 
-        <a href="https://instagram.com/fitcypher" target="_blank" class="cta-button">
+        <a
+          href="https://instagram.com/fitcypher.app"
+          target="_blank"
+          class="cta-button"
+        >
           Follow us on Instagram
         </a>
       </div>
     </div>
+
+    <!-- Script -->
     <script>
-     const images = [
-       'assets/IMG_5914.PNG',
-       'assets/IMG_5915.PNG',
-       'assets/IMG_5916.PNG',
-       'assets/IMG_5917.PNG',
-       'assets/IMG_5918.PNG',
-       'assets/IMG_5919.PNG',
-     ];
+      const images = [
+        'assets/IMG_5914.PNG',
+        'assets/IMG_5915.PNG',
+        'assets/IMG_5916.PNG',
+        'assets/IMG_5917.PNG',
+        'assets/IMG_5918.PNG',
+        'assets/IMG_5919.PNG',
+      ];
 
-     let currentIndex = 0;
-     const carouselImage = document.getElementById('carousel-image');
-     const nextButton = document.getElementById('next-button');
+      let currentIndex = 0;
+      const carouselImage = document.getElementById('carousel-image');
+      const nextButton = document.getElementById('next-button');
 
-     nextButton.addEventListener('click', () => {
-       currentIndex = (currentIndex + 1) % images.length;
-       carouselImage.src = images[currentIndex];
-     });
+      nextButton.addEventListener('click', () => {
+        currentIndex = (currentIndex + 1) % images.length;
+        console.log('Switching to:', images[currentIndex]); // debug
+        carouselImage.src = images[currentIndex];
+      });
+
+      carouselImage.onerror = () => {
+        carouselImage.alt = 'Image failed to load';
+        carouselImage.src = 'assets/logo_transparent.png';
+      };
     </script>
-
   </body>
 </html>
+
