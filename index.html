@@ -7,10 +7,10 @@
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <!-- Full-screen fractal electricity canvas -->
+  <!-- Canvas for fractal electricity -->
   <canvas id="bgCanvas"></canvas>
 
-  <!-- Centered card -->
+  <!-- Content card -->
   <div class="card">
     <img src="assets/logo_transparent.png" class="logo" alt="FitCypher Logo"/>
     <p class="tagline">
@@ -26,7 +26,7 @@
     </a>
   </div>
 
-  <!-- Modal carousel -->
+  <!-- Screenshot modal -->
   <div class="carousel-modal" id="carouselModal">
     <div class="carousel-background"></div>
     <div class="carousel-content">
@@ -39,95 +39,100 @@
   </div>
 
   <script>
-  // —— Modal logic ——
-  const screenshots = [
-    'assets/IMG_5914.PNG','assets/IMG_5915.PNG',
-    'assets/IMG_5916.PNG','assets/IMG_5917.PNG',
-    'assets/IMG_5918.PNG','assets/IMG_5919.PNG'
-  ];
-  let currentIndex = 0;
-  const modal = document.getElementById('carouselModal'),
-        carouselImage = document.getElementById('carouselImage');
-  document.getElementById('thumbnail').addEventListener('click', () => {
-    modal.classList.add('open');
-    carouselImage.src = screenshots[currentIndex];
-  });
-  document.getElementById('nextImage').addEventListener('click', () => {
-    currentIndex = (currentIndex + 1) % screenshots.length;
-    carouselImage.src = screenshots[currentIndex];
-  });
-  document.getElementById('closeModal').addEventListener('click', () => {
-    modal.classList.remove('open');
-  });
+    // Modal logic
+    const screenshots = [
+      'assets/IMG_5914.PNG','assets/IMG_5915.PNG',
+      'assets/IMG_5916.PNG','assets/IMG_5917.PNG',
+      'assets/IMG_5918.PNG','assets/IMG_5919.PNG'
+    ];
+    let currentIndex = 0;
+    const modal = document.getElementById('carouselModal'),
+          imgEl = document.getElementById('carouselImage');
+    document.getElementById('thumbnail').addEventListener('click', () => {
+      modal.classList.add('open');
+      imgEl.src = screenshots[currentIndex];
+    });
+    document.getElementById('nextImage').addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % screenshots.length;
+      imgEl.src = screenshots[currentIndex];
+    });
+    document.getElementById('closeModal').addEventListener('click', () => {
+      modal.classList.remove('open');
+    });
 
-  // —— Fractal-electric canvas ——
-  const canvas = document.getElementById('bgCanvas'),
-        ctx    = canvas.getContext('2d');
-  let w, h;
-  function resize() {
-    w = canvas.width  = window.innerWidth;
-    h = canvas.height = window.innerHeight;
-  }
-  window.addEventListener('resize', resize);
-  resize();
-
-  function drawBolt() {
-    // pick random start
-    let x = Math.random()*w, y = 0;
-    const segments = 5,
-          segH     = h/segments,
-          pts      = [[x,y]];
-    // build main path
-    for (let i=0; i<segments; i++){
-      y += segH;
-      pts.push([x,y]);
-      x += (Math.random()*2-1)*40;     // drift ±40px
-      pts.push([x,y]);
+    // Canvas electricity
+    const canvas = document.getElementById('bgCanvas'),
+          ctx    = canvas.getContext('2d');
+    let w,h;
+    function resize(){
+      w = canvas.width  = window.innerWidth;
+      h = canvas.height = window.innerHeight;
     }
-    // draw trunk
-    ctx.beginPath();
-    ctx.moveTo(pts[0][0], pts[0][1]);
-    pts.slice(1).forEach(p => ctx.lineTo(p[0], p[1]));
-    ctx.stroke();
+    window.addEventListener('resize', resize);
+    resize();
 
-    // two branches
-    for (let b=0; b<2; b++){
-      const bi = 1 + Math.floor(Math.random()*(pts.length-2)),
-            [bx,by] = pts[bi];
+    function drawFractal(startX, startY, horizontal=false){
+      const segments = 5;
+      const segL     = (horizontal ? w : h)/segments;
+      let x = startX, y = startY;
+      const pts = [[x,y]];
+
+      for(let i=0;i<segments;i++){
+        if(horizontal) x += segL;
+        else           y += segL;
+        pts.push([x,y]);
+        // 90° turn
+        if(horizontal) {
+          y += (Math.random()*2-1)*40;
+        } else {
+          x += (Math.random()*2-1)*40;
+        }
+        pts.push([x,y]);
+      }
+      // draw trunk
+      ctx.beginPath();
+      ctx.moveTo(pts[0][0], pts[0][1]);
+      pts.slice(1).forEach(p=>ctx.lineTo(p[0],p[1]));
+      ctx.stroke();
+
+      // one branch
+      const bi = 1 + Math.floor(Math.random()*(pts.length-2));
+      const [bx,by] = pts[bi];
       ctx.beginPath();
       ctx.moveTo(bx,by);
-      let branchX = bx, branchY = by;
-      if (b===0) {
-        // horizontal branch
-        branchX += (Math.random()*2-1)*segH*0.5;
+      if(horizontal) {
+        ctx.lineTo(bx, by + segL*0.4);
       } else {
-        // vertical branch
-        branchY += segH*0.3;
+        ctx.lineTo(bx + segL*0.4, by);
       }
-      ctx.lineTo(branchX,branchY);
       ctx.stroke();
     }
-  }
 
-  let lastTime = 0;
-  function animate(time) {
-    requestAnimationFrame(animate);
+    let last=0;
+    function animate(ts){
+      requestAnimationFrame(animate);
+      // fade
+      ctx.globalCompositeOperation='source-over';
+      ctx.fillStyle='rgba(0,0,0,0.05)';
+      ctx.fillRect(0,0,w,h);
 
-    // fade trails
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.fillStyle = 'rgba(0,0,0,0.04)';
-    ctx.fillRect(0,0,w,h);
+      // every 1s draw either vertical or horizontal
+      if(ts - last > 1000){
+        ctx.globalCompositeOperation='lighter';
+        ctx.strokeStyle='rgba(157,78,221,0.8)';
+        ctx.lineWidth = 4;
 
-    // draw very slowly: once every 3s
-    if (time - lastTime > 3000) {
-      ctx.globalCompositeOperation = 'lighter';
-      ctx.strokeStyle = 'rgba(157,78,221,0.8)';
-      ctx.lineWidth   = 5;
-      drawBolt();
-      lastTime = time;
+        if(Math.random()<0.5){
+          // vertical from top
+          drawFractal(Math.random()*w, 0, false);
+        } else {
+          // horizontal from left
+          drawFractal(0, Math.random()*h, true);
+        }
+        last = ts;
+      }
     }
-  }
-  animate();
+    animate();
   </script>
 </body>
 </html>
