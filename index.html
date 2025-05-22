@@ -7,30 +7,16 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="gradient-bg">
-      <div class="card">
-        <img src="assets/logo_transparent.png" alt="FitCypher Logo" class="logo" />
-        <p class="tagline">Track workouts. Fuel growth. Stay locked in.</p>
+    <div class="screenshot-thumbnail" id="thumbnail">
+      <img src="assets/IMG_5914.PNG" alt="Preview Screenshot" />
+    </div>
 
-        <!-- Thumbnail -->
-        <div class="screenshot-thumbnail" id="thumbnail">
-          <img src="assets/IMG_5914.PNG" alt="Preview Screenshot" />
-        </div>
-
-        <!-- Modal 3D Carousel -->
-        <div class="carousel-modal" id="carouselModal">
-          <div class="carousel-background"></div>
-          <div class="carousel-container">
-            <div class="carousel" id="carousel"></div>
-            <button class="carousel-close" id="closeModal">✕</button>
-            <button class="carousel-next" id="nextImage">▶</button>
-          </div>
-        </div>
-
-        <p class="beta-note">🧪 In development — beta coming soon</p>
-        <a href="https://instagram.com/fitcypher.app" target="_blank" class="cta-button">
-          Follow us on Instagram
-        </a>
+    <div class="carousel-modal" id="carouselModal">
+      <div class="carousel-background"></div>
+      <div class="carousel-content">
+        <img id="modalImage" src="assets/IMG_5914.PNG" alt="Modal" />
+        <button id="nextImage">▶</button>
+        <button id="closeModal">✕</button>
       </div>
     </div>
 
@@ -40,66 +26,27 @@
         'assets/IMG_5915.PNG',
         'assets/IMG_5916.PNG',
         'assets/IMG_5917.PNG',
-        'assets/IMG_5918.PNG',
-        'assets/IMG_5919.PNG',
       ];
-
-      const thumbnail = document.getElementById('thumbnail');
-      const modal = document.getElementById('carouselModal');
-      const carousel = document.getElementById('carousel');
-      const closeModal = document.getElementById('closeModal');
-      const nextButton = document.getElementById('nextImage');
 
       let currentIndex = 0;
 
-      // Populate carousel
-      screenshots.forEach((src, index) => {
-        const img = document.createElement('img');
-        img.src = src;
-        img.classList.add('carousel-image');
-        if (index === 0) img.classList.add('active');
-        carousel.appendChild(img);
-      });
-
-      const updateCarousel = () => {
-        const images = document.querySelectorAll('.carousel-image');
-        images.forEach((img, idx) => {
-          img.classList.remove('active');
-          if (idx === currentIndex) img.classList.add('active');
-        });
-        carousel.style.transform = `rotateY(${-currentIndex * 60}deg)`;
-      };
+      const thumbnail = document.getElementById('thumbnail');
+      const modal = document.getElementById('carouselModal');
+      const modalImage = document.getElementById('modalImage');
+      const nextImage = document.getElementById('nextImage');
+      const closeModal = document.getElementById('closeModal');
 
       thumbnail.addEventListener('click', () => {
         modal.classList.add('open');
-        document.body.style.overflow = 'hidden';
+      });
+
+      nextImage.addEventListener('click', () => {
+        currentIndex = (currentIndex + 1) % screenshots.length;
+        modalImage.src = screenshots[currentIndex];
       });
 
       closeModal.addEventListener('click', () => {
         modal.classList.remove('open');
-        document.body.style.overflow = '';
-      });
-
-      nextButton.addEventListener('click', () => {
-        currentIndex = (currentIndex + 1) % screenshots.length;
-        updateCarousel();
-      });
-
-      // Optional: swipe navigation (mobile)
-      let startX = 0;
-      carousel.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-      });
-
-      carousel.addEventListener('touchend', (e) => {
-        const endX = e.changedTouches[0].clientX;
-        if (startX - endX > 50) {
-          currentIndex = (currentIndex + 1) % screenshots.length;
-          updateCarousel();
-        } else if (endX - startX > 50) {
-          currentIndex = (currentIndex - 1 + screenshots.length) % screenshots.length;
-          updateCarousel();
-        }
       });
     </script>
   </body>
