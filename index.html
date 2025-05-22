@@ -1,60 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FitCypher</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="background">
-    
-    <!-- SVG Circuit Pattern -->
-    <svg class="circuit-overlay" viewBox="0 0 800 600" preserveAspectRatio="none">
-      <defs>
-        <linearGradient id="glowLine" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#9d4edd">
-            <animate attributeName="stop-color" values="#9d4edd;#00b4d8;#9d4edd" dur="4s" repeatCount="indefinite" />
-          </stop>
-          <stop offset="100%" stop-color="#00b4d8">
-            <animate attributeName="stop-color" values="#00b4d8;#9d4edd;#00b4d8" dur="4s" repeatCount="indefinite" />
-          </stop>
-        </linearGradient>
-      </defs>
-      <g stroke="url(#glowLine)" stroke-width="1.5" fill="none">
-        <path d="M50 100 L200 100 L200 200 L400 200" />
-        <path d="M100 300 L300 300 L300 400 L600 400" />
-        <path d="M50 500 L250 500 L250 350 L550 350" />
-        <circle cx="200" cy="100" r="4" fill="#9d4edd"/>
-        <circle cx="300" cy="400" r="4" fill="#00b4d8"/>
-        <circle cx="250" cy="500" r="4" fill="#9d4edd"/>
-      </g>
-    </svg>
+  <!-- Fractal electricity background -->
+  <canvas id="bgCanvas"></canvas>
 
-    <!-- Main Content -->
-    <div class="card">
-      <img src="assets/logo_transparent.png" class="logo" alt="FitCypher Logo" />
-      <p class="tagline">
-        Track workouts. <span class="glow-purple">Fuel growth.</span> <span class="glow-blue">Stay locked in.</span>
-      </p>
-
-      <div class="screenshot" id="thumbnail">
-        <img src="assets/IMG_5914.PNG" alt="App Screenshot" />
-      </div>
-
-      <p class="beta-note">🧪 In development — beta coming soon</p>
-
-      <a href="https://instagram.com/fitcypher.app" target="_blank" class="cta-button">
-        Follow us on Instagram
-      </a>
+  <!-- Centered content card -->
+  <div class="card">
+    <img src="assets/logo_transparent.png" class="logo" alt="FitCypher Logo">
+    <p class="tagline">
+      Track workouts. <span class="glow-purple">Fuel growth.</span> <span class="glow-blue">Stay locked in.</span>
+    </p>
+    <div class="screenshot" id="thumbnail">
+      <img src="assets/IMG_5914.PNG" alt="App Screenshot">
     </div>
+    <p class="beta-note">🧪 In development — beta coming soon</p>
+    <a href="https://instagram.com/fitcypher.app" target="_blank" class="cta-button">
+      Follow us on Instagram
+    </a>
   </div>
 
-  <!-- Modal -->
+  <!-- Modal for cycling screenshots -->
   <div class="carousel-modal" id="carouselModal">
     <div class="carousel-background"></div>
     <div class="carousel-content">
-      <img id="carouselImage" src="assets/IMG_5914.PNG" alt="Screenshot" />
+      <img id="carouselImage" src="assets/IMG_5914.PNG" alt="Screenshot">
       <div class="carousel-buttons">
         <button id="nextImage">▶</button>
         <button id="closeModal">✕</button>
@@ -63,34 +38,76 @@
   </div>
 
   <script>
+    // ---- Screenshot modal logic ----
     const screenshots = [
-      'assets/IMG_5914.PNG',
-      'assets/IMG_5915.PNG',
-      'assets/IMG_5916.PNG',
-      'assets/IMG_5917.PNG',
-      'assets/IMG_5918.PNG',
-      'assets/IMG_5919.PNG',
+      'assets/IMG_5914.PNG','assets/IMG_5915.PNG',
+      'assets/IMG_5916.PNG','assets/IMG_5917.PNG',
+      'assets/IMG_5918.PNG','assets/IMG_5919.PNG'
     ];
     let currentIndex = 0;
     const modal = document.getElementById('carouselModal');
-    const image = document.getElementById('carouselImage');
-
+    const carouselImage = document.getElementById('carouselImage');
     document.getElementById('thumbnail').addEventListener('click', () => {
       modal.classList.add('open');
-      image.src = screenshots[currentIndex];
+      carouselImage.src = screenshots[currentIndex];
     });
-
     document.getElementById('nextImage').addEventListener('click', () => {
       currentIndex = (currentIndex + 1) % screenshots.length;
-      image.src = screenshots[currentIndex];
+      carouselImage.src = screenshots[currentIndex];
     });
-
     document.getElementById('closeModal').addEventListener('click', () => {
       modal.classList.remove('open');
     });
+
+    // ---- Fractal electricity animation ----
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    let w, h;
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function drawLightning(x1,y1,x2,y2, displace) {
+      if (displace < 4) {
+        ctx.beginPath();
+        ctx.moveTo(x1,y1);
+        ctx.lineTo(x2,y2);
+        ctx.stroke();
+      } else {
+        const midx = (x1+x2)/2 + (Math.random()*2-1)*displace;
+        const midy = (y1+y2)/2 + (Math.random()*2-1)*displace;
+        drawLightning(x1,y1,midx,midy, displace*0.5);
+        drawLightning(x2,y2,midx,midy, displace*0.5);
+      }
+    }
+
+    function animate() {
+      // Fade previous frame
+      ctx.fillStyle = 'rgba(0,0,0,0.08)';
+      ctx.fillRect(0,0,w,h);
+
+      // Configure glow stroke
+      ctx.shadowColor = 'rgba(157,78,221,0.8)';
+      ctx.shadowBlur = 8;
+      ctx.strokeStyle = 'rgba(157,78,221,0.6)';
+      ctx.lineWidth = 2;
+
+      // Draw a couple of random bolts top→bottom
+      for (let i = 0; i < 2; i++) {
+        const x1 = Math.random()*w, y1 = 0;
+        const x2 = Math.random()*w, y2 = h;
+        drawLightning(x1,y1,x2,y2, h * 0.25);
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
   </script>
 </body>
 </html>
+
 
 
 

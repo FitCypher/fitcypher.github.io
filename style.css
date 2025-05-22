@@ -1,105 +1,79 @@
+/* Reset & full-screen canvas */
 body {
   margin: 0;
+  overflow: hidden;
   background: #0f0f2d;
   font-family: 'Segoe UI', sans-serif;
   color: white;
-  overflow: hidden;
 }
-
-.background {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  background: linear-gradient(-45deg, #0f0f2d, #1c1c2c, #111132, #0f0f2d);
-  background-size: 400% 400%;
-  animation: bgShift 20s ease infinite;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
-
-@keyframes bgShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.circuit-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
+#bgCanvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   z-index: 0;
-  opacity: 0.3;
 }
 
+/* Card centered */
 .card {
-  z-index: 2;
   position: relative;
-  background: rgba(28, 28, 44, 0.85);
+  z-index: 2;
+  background: rgba(28,28,44,0.85);
   border-radius: 20px;
   padding: 32px;
   max-width: 400px;
   width: 90%;
   text-align: center;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+  margin: auto;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .logo {
   width: 120px;
   margin-bottom: 16px;
 }
-
 .tagline {
   font-size: 18px;
   line-height: 1.5;
   margin-bottom: 20px;
 }
-
 .glow-purple {
   color: #9d4edd;
-  text-shadow: 0 0 8px rgba(157, 78, 221, 0.5);
+  text-shadow: 0 0 8px rgba(157,78,221,0.5);
 }
-
 .glow-blue {
   color: #00b4d8;
-  text-shadow: 0 0 8px rgba(0, 180, 216, 0.5);
+  text-shadow: 0 0 8px rgba(0,180,216,0.5);
 }
-
 .screenshot img {
   width: 100%;
   border-radius: 16px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5);
   margin-bottom: 16px;
   cursor: pointer;
 }
-
 .beta-note {
   color: #aaa;
   font-style: italic;
   font-size: 13px;
   margin-bottom: 12px;
 }
-
 .cta-button {
   background: #00b4d8;
   color: white;
-  font-weight: bold;
-  text-decoration: none;
   padding: 12px 20px;
   border-radius: 10px;
-  transition: background 0.3s ease;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background 0.3s;
   display: inline-block;
 }
-
 .cta-button:hover {
   background: #009fc5;
 }
 
-/* Modal Styles */
+/* Modal styles */
 .carousel-modal {
   position: fixed;
   inset: 0;
@@ -108,39 +82,33 @@ body {
   align-items: center;
   z-index: 9999;
 }
-
 .carousel-modal.open {
   display: flex;
 }
-
 .carousel-background {
   position: absolute;
   inset: 0;
   backdrop-filter: blur(14px);
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0,0,0,0.7);
   z-index: 1;
 }
-
 .carousel-content {
   position: relative;
   z-index: 2;
   text-align: center;
 }
-
 .carousel-content img {
   max-width: 90vw;
   max-height: 80vh;
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
 }
-
 .carousel-buttons {
   margin-top: 20px;
   display: flex;
   justify-content: center;
   gap: 10px;
 }
-
 .carousel-buttons button {
   font-size: 20px;
   background: #9d4edd;
@@ -150,10 +118,10 @@ body {
   padding: 8px 16px;
   cursor: pointer;
 }
-
 #closeModal {
   background: #d00056;
 }
+
 
 
 
