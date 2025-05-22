@@ -1,19 +1,15 @@
-/* allow scroll if needed */
+/* Hide scrollbars (but preserve scrollability) */
 html, body {
-  margin: 0; padding: 0;
-  overflow-y: hidden;
-  background: #0f0f2d;
-  font-family: 'Segoe UI', sans-serif;
-  color: white;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; /* card at top */
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-html::-webkit-scrollbar {
-  display: none;                /* Chrome, Safari, Opera */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
 }
-/* lightning canvas */
+
+/* Lightning canvas */
 #bgCanvas {
   position: fixed;
   top: 0; left: 0;
@@ -21,7 +17,7 @@ html::-webkit-scrollbar {
   z-index: 0;
 }
 
-/* card */
+/* Card styling */
 .card {
   position: relative;
   z-index: 2;
@@ -29,12 +25,16 @@ html::-webkit-scrollbar {
   border-radius: 20px;
   padding: 24px;
   width: 90%;
-  overflow-y: hidden;
-  max-width: 480px; /* wider card */
+  max-width: 480px;
   margin: 20px auto;
   text-align: center;
   box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+  /* no internal scrollbars on the card */
+  overflow: visible;
 }
+
+/* …rest of your CSS… */
+
 
 .logo {
   width: 120px;
