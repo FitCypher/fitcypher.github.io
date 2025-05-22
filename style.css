@@ -1,7 +1,7 @@
 /* allow scroll if needed */
 html, body {
   margin: 0; padding: 0;
-  overflow: hidden;
+  overflow-y: hidden;
   background: #0f0f2d;
   font-family: 'Segoe UI', sans-serif;
   color: white;
@@ -10,7 +10,9 @@ html, body {
   justify-content: center;
   align-items: flex-start; /* card at top */
 }
-
+html::-webkit-scrollbar {
+  display: none;                /* Chrome, Safari, Opera */
+}
 /* lightning canvas */
 #bgCanvas {
   position: fixed;
@@ -27,6 +29,7 @@ html, body {
   border-radius: 20px;
   padding: 24px;
   width: 90%;
+  overflow-y: hidden;
   max-width: 480px; /* wider card */
   margin: 20px auto;
   text-align: center;
