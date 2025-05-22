@@ -1,76 +1,82 @@
 body {
   margin: 0;
   background: #0f0f2d;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', sans-serif;
   color: white;
+  overflow: hidden; /* prevent scroll */
+  height: 100vh;
 }
 
-/* Proper vertical spacing and centering */
+/* Full-screen layout */
 .gradient-bg {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 60px 20px;
-  min-height: 100vh;
+  align-items: center;
+  height: 100vh;
+  padding: 0 16px;
 }
 
-/* The content card */
 .card {
   background: #1c1c2c;
-  padding: 32px 24px;
+  padding: 24px;
   border-radius: 16px;
-  max-width: 420px;
+  max-width: 380px;
   width: 100%;
   text-align: center;
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 }
 
 .logo {
-  width: 140px;
-  margin-bottom: 20px;
+  width: 120px;
 }
 
 .tagline {
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 500;
-  margin-bottom: 24px;
-  color: #fff;
+  background: linear-gradient(90deg, #9d4edd, #00b4d8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 6px rgba(157, 78, 221, 0.3);
+  margin: 0;
 }
 
-.beta-note {
-  margin-top: 20px;
-  color: #aaa;
-  font-style: italic;
-}
-
-.cta-button {
-  display: inline-block;
-  background: #00b4d8;
-  color: white;
-  padding: 12px 20px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: bold;
-  margin-top: 10px;
-  transition: background 0.2s;
-}
-
-.cta-button:hover {
-  background: #009fc5;
-}
-
-/* Thumbnail preview */
 .screenshot-thumbnail {
-  max-width: 300px;
-  margin: 0 auto 20px;
+  max-width: 280px;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .screenshot-thumbnail img {
   width: 100%;
   border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
   display: block;
+}
+
+/* Instagram and note */
+.beta-note {
+  font-size: 13px;
+  color: #aaa;
+  font-style: italic;
+}
+
+.cta-button {
+  background: #00b4d8;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.2s;
+  font-size: 14px;
+}
+
+.cta-button:hover {
+  background: #009fc5;
 }
 
 /* MODAL */
@@ -90,30 +96,29 @@ body {
 .carousel-background {
   position: absolute;
   inset: 0;
-  backdrop-filter: blur(10px);
-  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+  background: rgba(0, 0, 0, 0.7);
   z-index: 1;
 }
 
 .carousel-content {
   position: relative;
   z-index: 2;
-  padding: 20px;
+  padding: 16px;
   text-align: center;
 }
 
 .carousel-content img {
   width: 90vw;
-  max-width: 400px;
+  max-width: 360px;
   max-height: 70vh;
   border-radius: 16px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   object-fit: contain;
 }
 
-/* Modal buttons */
 .carousel-buttons {
-  margin-top: 20px;
+  margin-top: 16px;
   display: flex;
   gap: 12px;
   justify-content: center;
@@ -125,7 +130,7 @@ body {
   color: white;
   border: none;
   border-radius: 8px;
-  padding: 8px 16px;
+  padding: 8px 14px;
   cursor: pointer;
 }
 
