@@ -7,27 +7,31 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- Outer background container -->
   <div class="gradient-bg">
+    <!-- Centered card with content -->
     <div class="card">
       <img src="assets/logo_transparent.png" alt="FitCypher Logo" class="logo" />
       <p class="tagline">Track workouts. Fuel growth. Stay locked in.</p>
 
+      <!-- Clickable screenshot -->
       <div class="screenshot-thumbnail" id="thumbnail">
-        <img src="assets/IMG_5914.PNG" alt="App Screenshot" />
+        <img src="assets/IMG_5914.PNG" alt="Preview Screenshot" />
       </div>
 
       <p class="beta-note">🧪 In development — beta coming soon</p>
+
       <a href="https://instagram.com/fitcypher.app" target="_blank" class="cta-button">
         Follow us on Instagram
       </a>
     </div>
   </div>
 
-  <!-- Modal OUTSIDE of .card -->
+  <!-- Modal placed outside content to avoid interfering -->
   <div class="carousel-modal" id="carouselModal">
     <div class="carousel-background"></div>
     <div class="carousel-content">
-      <img id="carouselImage" src="assets/IMG_5914.PNG" alt="Slide" />
+      <img id="carouselImage" src="assets/IMG_5914.PNG" alt="App Screenshot" />
       <div class="carousel-buttons">
         <button id="nextImage">▶</button>
         <button id="closeModal">✕</button>
@@ -46,26 +50,20 @@
     ];
 
     let currentIndex = 0;
-    const thumbnail = document.getElementById('thumbnail');
     const modal = document.getElementById('carouselModal');
     const image = document.getElementById('carouselImage');
-    const nextBtn = document.getElementById('nextImage');
-    const closeBtn = document.getElementById('closeModal');
 
-    thumbnail.addEventListener('click', () => {
+    document.getElementById('thumbnail').addEventListener('click', () => {
       modal.classList.add('open');
       image.src = screenshots[currentIndex];
     });
 
-    nextBtn.addEventListener('click', () => {
+    document.getElementById('nextImage').addEventListener('click', () => {
       currentIndex = (currentIndex + 1) % screenshots.length;
-      image.classList.remove('fade-in');
-      void image.offsetWidth; // trigger reflow
       image.src = screenshots[currentIndex];
-      image.classList.add('fade-in');
     });
 
-    closeBtn.addEventListener('click', () => {
+    document.getElementById('closeModal').addEventListener('click', () => {
       modal.classList.remove('open');
     });
   </script>
