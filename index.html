@@ -2,22 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>FitCypher</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <!-- Full‐screen lightning canvas -->
+  <!-- Animated electricity background -->
   <canvas id="bgCanvas"></canvas>
 
-  <!-- Centered card -->
+  <!-- Centered content card -->
   <div class="card">
-    <img src="assets/logo_transparent.png" class="logo" alt="FitCypher Logo" />
+    <img src="assets/logo_transparent.png" class="logo" alt="FitCypher Logo"/>
     <p class="tagline">
-      Track workouts. <span class="glow-purple">Fuel growth.</span> <span class="glow-blue">Stay locked in.</span>
+      Track workouts. <span class="glow-purple">Fuel growth.</span> 
+      <span class="glow-blue">Stay locked in.</span>
     </p>
     <div class="screenshot" id="thumbnail">
-      <img src="assets/IMG_5914.PNG" alt="App Screenshot" />
+      <img src="assets/IMG_5914.PNG" alt="App Screenshot"/>
     </div>
     <p class="beta-note">🧪 In development — beta coming soon</p>
     <a href="https://instagram.com/fitcypher.app" target="_blank" class="cta-button">
@@ -25,11 +26,11 @@
     </a>
   </div>
 
-  <!-- Modal for cycling screenshots -->
+  <!-- Modal for screenshot cycling -->
   <div class="carousel-modal" id="carouselModal">
     <div class="carousel-background"></div>
     <div class="carousel-content">
-      <img id="carouselImage" src="assets/IMG_5914.PNG" alt="Screenshot" />
+      <img id="carouselImage" src="assets/IMG_5914.PNG" alt="Screenshot"/>
       <div class="carousel-buttons">
         <button id="nextImage">▶</button>
         <button id="closeModal">✕</button>
@@ -38,76 +39,77 @@
   </div>
 
   <script>
-    // Modal logic
-    const screenshots = [
-      'assets/IMG_5914.PNG','assets/IMG_5915.PNG',
-      'assets/IMG_5916.PNG','assets/IMG_5917.PNG',
-      'assets/IMG_5918.PNG','assets/IMG_5919.PNG'
-    ];
-    let currentIndex = 0;
-    const modal = document.getElementById('carouselModal');
-    const carouselImage = document.getElementById('carouselImage');
-    document.getElementById('thumbnail').addEventListener('click', () => {
-      modal.classList.add('open');
-      carouselImage.src = screenshots[currentIndex];
-    });
-    document.getElementById('nextImage').addEventListener('click', () => {
-      currentIndex = (currentIndex + 1) % screenshots.length;
-      carouselImage.src = screenshots[currentIndex];
-    });
-    document.getElementById('closeModal').addEventListener('click', () => {
-      modal.classList.remove('open');
-    });
+  // ——— Modal Logic ———
+  const screenshots = [
+    'assets/IMG_5914.PNG','assets/IMG_5915.PNG',
+    'assets/IMG_5916.PNG','assets/IMG_5917.PNG',
+    'assets/IMG_5918.PNG','assets/IMG_5919.PNG'
+  ];
+  let currentIndex = 0;
+  const modal = document.getElementById('carouselModal'),
+        carouselImage = document.getElementById('carouselImage');
+  document.getElementById('thumbnail').addEventListener('click', ()=>{
+    modal.classList.add('open');
+    carouselImage.src = screenshots[currentIndex];
+  });
+  document.getElementById('nextImage').addEventListener('click', ()=>{
+    currentIndex = (currentIndex+1)%screenshots.length;
+    carouselImage.src = screenshots[currentIndex];
+  });
+  document.getElementById('closeModal').addEventListener('click', ()=>{
+    modal.classList.remove('open');
+  });
 
-    // Canvas fractal lightning
-    const canvas = document.getElementById('bgCanvas');
-    const ctx = canvas.getContext('2d');
-    let w, h;
-    function resize() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
+  // ——— Canvas Fractal-Electric Animation ———
+  const canvas = document.getElementById('bgCanvas'),
+        ctx = canvas.getContext('2d');
+  let w,h;
+  function resize(){
+    w=canvas.width=window.innerWidth;
+    h=canvas.height=window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function drawCircuitBolt(){
+    const segments = 6;
+    const segH = h/segments;
+    let x = Math.random()*w, y=0;
+    ctx.beginPath();
+    ctx.moveTo(x,y);
+    for(let i=0;i<segments;i++){
+      y += segH;
+      ctx.lineTo(x,y);
+      // 90° turn
+      const dx = (Math.random()*2-1)*150;
+      x += dx;
+      ctx.lineTo(x,y);
     }
-    window.addEventListener('resize', resize);
-    resize();
+    ctx.stroke();
+  }
 
-    // Recursive bolt
-    function bolt(x1,y1,x2,y2,displace) {
-      if (displace < 1) {
-        ctx.lineTo(x2,y2);
-      } else {
-        const midx = (x1+x2)/2 + (Math.random()*2-1)*displace;
-        const midy = (y1+y2)/2 + (Math.random()*2-1)*displace;
-        bolt(x1,y1,midx,midy,displace*0.6);
-        bolt(x2,y2,midx,midy,displace*0.6);
-      }
+  let lastTime = 0;
+  function animate(time){
+    requestAnimationFrame(animate);
+    // fade old frame
+    ctx.globalCompositeOperation='source-over';
+    ctx.fillStyle='rgba(0,0,0,0.08)';
+    ctx.fillRect(0,0,w,h);
+
+    // draw bolt only every 300ms
+    if(time - lastTime > 300){
+      ctx.globalCompositeOperation='lighter';
+      ctx.strokeStyle='rgba(157,78,221,0.4)';
+      ctx.lineWidth=2;
+      drawCircuitBolt();
+      lastTime = time;
     }
-
-    function drawLightning() {
-      // fade with low alpha to leave trails
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.fillStyle = 'rgba(0,0,0,0.05)';
-      ctx.fillRect(0,0,w,h);
-
-      // draw bolts in 'lighter' mode for glow
-      ctx.globalCompositeOperation = 'lighter';
-      for (let i=0; i<3; i++) {
-        const x1 = Math.random()*w;
-        const y1 = 0;
-        const x2 = Math.random()*w;
-        const y2 = h;
-        ctx.strokeStyle = (i%2===0) ? 'rgba(157,78,221,0.3)' : 'rgba(0,180,216,0.3)';
-        ctx.lineWidth = 2 + Math.random()*2;
-        ctx.beginPath();
-        ctx.moveTo(x1,y1);
-        bolt(x1,y1,x2,y2,h*0.25);
-        ctx.stroke();
-      }
-      requestAnimationFrame(drawLightning);
-    }
-    drawLightning();
+  }
+  animate();
   </script>
 </body>
 </html>
+
 
 
 
