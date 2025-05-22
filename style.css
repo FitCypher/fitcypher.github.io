@@ -1,6 +1,7 @@
 /* allow scroll if needed */
 html, body {
   margin: 0; padding: 0;
+  overflow: hidden;
   background: #0f0f2d;
   font-family: 'Segoe UI', sans-serif;
   color: white;
@@ -123,10 +124,7 @@ html, body {
 #closeModal {
   background: #d00056;
 }
-/* hide Chrome/Safari scrollbar */
-html::-webkit-scrollbar { display: none; }
-/* hide Firefox scrollbar */
-html { scrollbar-width: none; }
+
 
 
 
