@@ -3,35 +3,137 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sign Up for Beta – FitCypher</title>
+  <title>Join the Beta – FitCypher</title>
   <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
 </head>
 <body>
   <canvas id="bgCanvas"></canvas>
 
   <div class="card">
     <h2 class="glow-purple">Join the Beta</h2>
-    <p class="tagline">Be among the first to experience the AI split builder. We're launching soon — reserve your spot below!</p>
+    <p class="tagline">
+      Be among the first to try the AI split builder.<br/>
+      Let us know where you heard about FitCypher:
+    </p>
 
-    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeP5o5XWlRrvIBgmWX3tBl9-wCTz7YE6RLT3p8DuXkwLFd78Q/viewform?usp=header"
-            allowtransparency="true"
-            loading="lazy">
+    <!-- 👇 Replace this iframe src with your actual Google Form URL -->
+    <iframe
+      src="https://docs.google.com/forms/d/e/1FAIpQLSeP5o5XWlRrvIBgmWX3tBl9-wCTz7YE6RLT3p8DuXkwLFd78Q/viewform?usp=header"
+      width="100%"
+      height="600"
+      frameborder="0"
+      marginheight="0"
+      marginwidth="0"
+      allowtransparency="true"
+      loading="lazy"
+    >
       Loading…
     </iframe>
 
-    <a href="index.html" class="cta-button">← Back to Home</a>
+    <a href="index.html" class="cta-button" style="margin-top: 24px;">← Back to Home</a>
   </div>
 
   <script>
-    // Reuse the lightning background
+    // Lightning background reused from index.html
     const canvas = document.getElementById('bgCanvas'),
           ctx = canvas.getContext('2d');
+    let W, H;
     function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
     }
     window.addEventListener('resize', resize);
     resize();
+
+    class Bolt {
+      constructor() {
+        this.start = performance.now();
+        this.duration = 8000;
+        this.horizontal = Math.random() < 0.5;
+        this.color = Math.random() < 0.5
+          ? 'rgba(157,78,221,0.8)'
+          : 'rgba(0,180,216,0.8)';
+        const segs = 5, len = (this.horizontal ? W : H)/segs, pts = [];
+        let x = this.horizontal ? 0 : Math.random()*W,
+            y = this.horizontal ? Math.random()*H : 0;
+        pts.push([x,y]);
+        for (let i=0; i<segs; i++){
+          if (this.horizontal) x+=len; else y+=len;
+          pts.push([x,y]);
+          if (this.horizontal) y+=(Math.random()*2-1)*40;
+          else x+=(Math.random()*2-1)*40;
+          pts.push([x,y]);
+        }
+        this.path = [];
+        for (let i=0; i<pts.length-1; i++){
+          const [x1,y1]=pts[i], [x2,y2]=pts[i+1];
+          for (let t=0; t<60; t++){
+            const f = t/60;
+            this.path.push([x1+(x2-x1)*f, y1+(y2-y1)*f]);
+          }
+        }
+        this.branchIdx = 1 + Math.floor(Math.random()*(pts.length-2));
+        const [bx,by] = pts[this.branchIdx];
+        this.branchPts = [[bx,by]];
+        for (let t=1; t<=40; t++){
+          const f = t/40;
+          if (this.horizontal)
+            this.branchPts.push([bx, by + len*0.3*f]);
+          else
+            this.branchPts.push([bx + len*0.3*f, by]);
+        }
+      }
+      draw(now) {
+        const t = (now - this.start)/this.duration,
+              tot = this.path.length,
+              head = Math.floor(tot * Math.min(t,1)),
+              tail = Math.max(0, head - Math.floor(tot*0.3));
+        if (head<=0) return;
+        ctx.beginPath();
+        ctx.moveTo(...this.path[tail]);
+        for (let i=tail+1; i<head; i++){
+          ctx.lineTo(...this.path[i]);
+        }
+        ctx.strokeStyle = this.color;
+        ctx.lineWidth = 4;
+        ctx.stroke();
+
+        const brStart = this.branchIdx/this.path.length;
+        if (t>brStart){
+          const bt = (t - brStart)/(1 - brStart),
+                btot = this.branchPts.length,
+                bh = Math.floor(btot * Math.min(bt,1)),
+                btIdx = Math.max(0, bh - Math.floor(btot*0.3));
+          ctx.beginPath();
+          ctx.moveTo(...this.branchPts[btIdx]);
+          for (let i=btIdx+1; i<bh; i++){
+            ctx.lineTo(...this.branchPts[i]);
+          }
+          ctx.stroke();
+        }
+      }
+      done(now) {
+        return now - this.start > this.duration * 1.3;
+      }
+    }
+
+    const bolts = [], spawnInterval = 1000;
+    let last = 0;
+    function animate(now){
+      requestAnimationFrame(animate);
+      ctx.clearRect(0,0,W,H);
+      if (now - last > spawnInterval){
+        for (let i=0; i<6; i++) bolts.push(new Bolt());
+        last = now;
+      }
+      bolts.forEach(b=>b.draw(now));
+      for (let i=bolts.length-1; i>=0; i--){
+        if (bolts[i].done(now)) bolts.splice(i,1);
+      }
+    }
+    animate(performance.now());
   </script>
 </body>
 </html>
+
